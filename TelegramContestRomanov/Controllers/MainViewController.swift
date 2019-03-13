@@ -14,18 +14,18 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     var dataGraph: [GraphInfo] = []
     var widthGraph: Double = 0{
         didSet{
-            print("did set widthGraph", self.widthGraph)
-            setSizeGraph(width: self.widthGraph)
+//            setSizeGraph(width: self.widthGraph)
         }
     }
     
+    @IBAction func tapButton(_ sender: UIButton) {
+        self.scrollView.setContentOffset(CGPoint(x: self.scrollView.contentOffset.x - 100, y: 0), animated: true)
+    }
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var graphView: GraphView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBAction func sliderValueChanged(_ sender: UISlider) {
-        let width = Double(self.view.frame.width) * 2 * Double(sender.value)
-        setSizeGraph(width: width)
-        
+        scaleWidth(width: self.widthGraph * Double(sender.value))
     }
     
     override func viewDidLoad() {
@@ -33,19 +33,35 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         let dataJson = ParseJson()
         self.dataGraph = dataJson.getArrPoint()
         setGraph(n: 0)
-        
     }
     
     func setSizeGraph(width: Double){
-        self.graphView.frame = CGRect(x: 0, y: 0, width: width, height: Double(self.scrollView.frame.height))
+        self.graphView.setWidth(width: width, height: Double(self.scrollView.frame.height), contentOfSet: self.scrollView.contentOffset.x, viewWidth: self.scrollView.frame.width)
         self.scrollView.contentSize = CGSize(width: CGFloat(width), height: self.scrollView.frame.height)
     }
     
     func setGraph(n: Int){
         self.widthGraph = Double(self.scrollView.frame.width) / 31 * Double(self.dataGraph[n].arrDayInfo.count - 1)
-        self.scrollView.setContentOffset(CGPoint(x: self.widthGraph - Double(self.scrollView.frame.width), y: 0), animated: true)
+        setSizeGraph(width: self.widthGraph)
         self.graphView.setPoints(graph: self.dataGraph[n])
+        self.scrollView.setContentOffset(CGPoint(x: self.widthGraph - Double(self.scrollView.frame.width), y: 0), animated: true)
     }
-
+    
+    func scaleWidth(width: Double){
+        setSizeGraph(width: width)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentIndex = scrollView.contentOffset.x
+        if contentIndex < 0{
+            self.scrollView.contentOffset.x = 0
+        }
+        if contentIndex > self.scrollView.contentSize.width - self.scrollView.frame.width{
+            self.scrollView.contentOffset.x = self.scrollView.contentSize.width - self.scrollView.frame.width
+        }
+        self.graphView.scaleVerticalGraph(contentOfSet: contentIndex, viewWidth: self.scrollView.frame.width)
+        
+    }
+    
     
 }
