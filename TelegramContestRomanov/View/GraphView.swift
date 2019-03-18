@@ -8,7 +8,9 @@
 
 import UIKit
 
-class GraphView: UIView, CAAnimationDelegate {
+class GraphView: UIView, CAAnimationDelegate{
+    
+    
     
     let deltaHeihgt: CGFloat = 30;
     var shapeLayer: [CAShapeLayer] = []
@@ -131,11 +133,11 @@ class GraphView: UIView, CAAnimationDelegate {
     }
     
     func scaleVerticalGraph(contentOfSet: CGFloat, viewWidth: CGFloat){
-        var startIndex: Int = Int(Double(contentOfSet) / self.stepX)
+        var startIndex: Int = Int(Double(contentOfSet) / self.stepX) - 1
         if startIndex < 0{
             startIndex = 0
         }
-        var stopIndex: Int = Int(Double(viewWidth) / self.stepX) + 2 + startIndex
+        var stopIndex: Int = Int(Double(viewWidth) / self.stepX) + 3 + startIndex
         if stopIndex >= (self.graph?.arrDayInfo.count)! - 1{
             stopIndex = (self.graph?.arrDayInfo.count)! - 1
         }
@@ -150,7 +152,7 @@ class GraphView: UIView, CAAnimationDelegate {
         self.maxValueY = max
         self.stepY = Double(self.frame.height - 2 * self.deltaHeihgt) / Double(self.maxValueY)
         if !isBusy{
-            reloadGraph(duration: 0.3)
+            reloadGraph(duration: 0.1)
         }
         
     }

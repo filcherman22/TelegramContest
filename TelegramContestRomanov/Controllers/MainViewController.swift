@@ -22,10 +22,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         self.scrollView.setContentOffset(CGPoint(x: self.scrollView.contentOffset.x - 100, y: 0), animated: true)
     }
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var dateView: DateView!
     @IBOutlet weak var graphView: GraphView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBAction func sliderValueChanged(_ sender: UISlider) {
         scaleWidth(width: self.widthGraph * Double(sender.value))
+//        self.testCollectionView.cellForItem(at: IndexPath(row: 0, section: 0))?.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
     }
     
     override func viewDidLoad() {
@@ -44,6 +46,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         self.widthGraph = Double(self.scrollView.frame.width) / 31 * Double(self.dataGraph[n].arrDayInfo.count - 1)
         setSizeGraph(width: self.widthGraph)
         self.graphView.setPoints(graph: self.dataGraph[n])
+        self.dateView.setDate(data: self.dataGraph[n])
         self.scrollView.setContentOffset(CGPoint(x: self.widthGraph - Double(self.scrollView.frame.width), y: 0), animated: true)
     }
     

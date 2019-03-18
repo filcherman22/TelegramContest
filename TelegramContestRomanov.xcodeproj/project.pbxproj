@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4A2CDE8E223840B500922A59 /* GraphInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A2CDE8D223840B500922A59 /* GraphInfo.swift */; };
+		4A943A87224036A000E39F7C /* DateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A943A86224036A000E39F7C /* DateView.swift */; };
+		4A943A89224036B100E39F7C /* DateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A943A88224036B100E39F7C /* DateView.xib */; };
 		4AD427582237F5E200701EF0 /* chart_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 4AD427572237F5E200701EF0 /* chart_data.json */; };
 		4AD4275A2237F60E00701EF0 /* DayInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD427592237F60E00701EF0 /* DayInfo.swift */; };
 		4AD4275D2237FC5400701EF0 /* DecodeStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD4275C2237FC5400701EF0 /* DecodeStructs.swift */; };
@@ -24,6 +26,8 @@
 
 /* Begin PBXFileReference section */
 		4A2CDE8D223840B500922A59 /* GraphInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphInfo.swift; sourceTree = "<group>"; };
+		4A943A86224036A000E39F7C /* DateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateView.swift; sourceTree = "<group>"; };
+		4A943A88224036B100E39F7C /* DateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateView.xib; sourceTree = "<group>"; };
 		4ACADC5D223938600044D301 /* TelegramContestRomanov.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TelegramContestRomanov.entitlements; sourceTree = "<group>"; };
 		4AD427572237F5E200701EF0 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; lineEnding = 0; name = chart_data.json; path = TelegramContestRomanov/chart_data.json; sourceTree = SOURCE_ROOT; };
 		4AD427592237F60E00701EF0 /* DayInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayInfo.swift; sourceTree = "<group>"; };
@@ -117,6 +121,8 @@
 			children = (
 				4AD43B612235237500C0C903 /* GraphView.swift */,
 				4AD43B6B223528D700C0C903 /* GraphView.xib */,
+				4A943A86224036A000E39F7C /* DateView.swift */,
+				4A943A88224036B100E39F7C /* DateView.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -219,6 +225,7 @@
 				4AD43B5A22351FF600C0C903 /* LaunchScreen.storyboard in Resources */,
 				4AD43B6C223528D700C0C903 /* GraphView.xib in Resources */,
 				4AD43B5722351FF600C0C903 /* Assets.xcassets in Resources */,
+				4A943A89224036B100E39F7C /* DateView.xib in Resources */,
 				4AD43B5522351FF200C0C903 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -236,6 +243,7 @@
 				4AD43B622235237500C0C903 /* GraphView.swift in Sources */,
 				4AD4275F223818EE00701EF0 /* ParseJson.swift in Sources */,
 				4AD43B71223548B300C0C903 /* MainCollectionViewCell.swift in Sources */,
+				4A943A87224036A000E39F7C /* DateView.swift in Sources */,
 				4AD4275A2237F60E00701EF0 /* DayInfo.swift in Sources */,
 				4AD43B64223523E900C0C903 /* MainViewController.swift in Sources */,
 			);
