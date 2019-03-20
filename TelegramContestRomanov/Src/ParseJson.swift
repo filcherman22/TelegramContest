@@ -50,7 +50,7 @@ class ParseJson {
             let data = try Data(contentsOf: URL(fileURLWithPath: file!))
             let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as! [AnyObject]
             for el in jsonData!{
-                var nameX: String = "x"
+                let nameX: String = "x"
                 var arrLineNames: [String] = []
                 var arrDayInfo: [DayInfoUni] = []
                 var arrColors: [UIColor] = []
@@ -76,10 +76,20 @@ class ParseJson {
                         let value = columns[n][i] as! Int
                         arrValue.append(value)
                     }
-                    arrDayInfo.append(DayInfoUni(dateInt: columns[0][i] as! Int, arrYValue: arrValue))
+                    arrDayInfo.append(DayInfoUni(dateInt: (columns[0][i] as! Int) / 1000, arrYValue: arrValue))
+                }
+                var dayInfoVar: DayInfoUni?
+                for i in 0...arrDayInfo.count - 2{
+                    for j in i...arrDayInfo.count - 2{
+                        if arrDayInfo[j].date < arrDayInfo[j+1].date{
+                            dayInfoVar = arrDayInfo[j]
+                            arrDayInfo[j] = arrDayInfo[j+1]
+                            arrDayInfo[j+1] = dayInfoVar!
+                        }
+                    }
+                    
                 }
                 self.arrGraph.append(GraphInfo(arrDayInfo: arrDayInfo, arrLineName: arrLineNames, arrLineColor: arrColors, nameX: nameX))
-                
             }
         }
         catch let error{

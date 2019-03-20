@@ -124,9 +124,7 @@ class GraphView: UIView, CAAnimationDelegate{
             self.path[i] = path
             animation.toValue = path
             animation.delegate = self
-            
             shapeLayer[i].add(animation, forKey: nil)
-            
         }
         
         
@@ -158,12 +156,10 @@ class GraphView: UIView, CAAnimationDelegate{
     }
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        print("finish")
         isBusy = false
     }
     
     func animationDidStart(_ anim: CAAnimation) {
-        print("start")
         isBusy = true
     }
     

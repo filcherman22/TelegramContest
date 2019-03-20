@@ -12,11 +12,9 @@ import UIKit
 class MainViewController: UIViewController, UIScrollViewDelegate {
     
     var dataGraph: [GraphInfo] = []
-    var widthGraph: Double = 0{
-        didSet{
-//            setSizeGraph(width: self.widthGraph)
-        }
-    }
+    var widthGraph: Double = 0
+    let heightGraphView: CGFloat = 200
+    let heightDateView: CGFloat = 50
     
     @IBAction func tapButton(_ sender: UIButton) {
         self.scrollView.setContentOffset(CGPoint(x: self.scrollView.contentOffset.x - 100, y: 0), animated: true)
@@ -34,11 +32,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         let dataJson = ParseJson()
         self.dataGraph = dataJson.getArrPoint()
-        setGraph(n: 0)
+        setGraph(n: 1)
     }
     
     func setSizeGraph(width: Double){
-        self.graphView.setWidth(width: width, height: Double(self.scrollView.frame.height), contentOfSet: self.scrollView.contentOffset.x, viewWidth: self.scrollView.frame.width)
+        self.graphView.setWidth(width: width, height: Double(self.scrollView.frame.height - self.heightDateView), contentOfSet: self.scrollView.contentOffset.x, viewWidth: self.scrollView.frame.width)
+        self.dateView.setWidth(x: 0, y: self.scrollView.frame.height - self.heightDateView, width: CGFloat(width), height: self.heightDateView)
         self.scrollView.contentSize = CGSize(width: CGFloat(width), height: self.scrollView.frame.height)
     }
     
