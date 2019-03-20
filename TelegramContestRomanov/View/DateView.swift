@@ -24,6 +24,7 @@ class DateView: UIView {
     
 
     @IBOutlet var dateView: UIView!
+    
     var arrLabel: [UILabel] = []
     var arrStepBack: [[Bool]] = []
     var countSaveArr: Int = 0
@@ -37,15 +38,12 @@ class DateView: UIView {
         didSet(oldValue){
             if oldValue != 0{
                 let div = Int(self.labelNum / self.labelNumStart)
-                print(div)
                 let rest: CGFloat = self.labelNum - CGFloat(Int(self.labelNum / self.labelNumStart)) * self.labelNumStart
                 let lineStop: CGFloat = self.labelNumStart / 4
                 if div > countSaveArr{
-                    print("More")
                     saveArrStepBack()
                 }
                 else if div < countSaveArr{
-                    print("lower")
                     self.arrStepBack.removeLast()
                     countSaveArr = countSaveArr - 1
                 }
@@ -175,7 +173,6 @@ class DateView: UIView {
                 isAlphaArr.append(true)
             }
         }
-        print(isAlphaArr)
         self.arrStepBack.append(isAlphaArr)
         self.countSaveArr = self.arrStepBack.count
     }

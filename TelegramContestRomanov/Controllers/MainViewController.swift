@@ -25,7 +25,9 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBAction func sliderValueChanged(_ sender: UISlider) {
         scaleWidth(width: self.widthGraph * Double(sender.value))
-//        self.testCollectionView.cellForItem(at: IndexPath(row: 0, section: 0))?.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
+    }
+    @IBAction func RangeSliderValueChanged(_ sender: RangeSlider) {
+        print(sender.lowerValue)
     }
     
     override func viewDidLoad() {

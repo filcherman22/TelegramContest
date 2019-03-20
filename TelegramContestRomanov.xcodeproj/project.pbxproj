@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4A2CDE8E223840B500922A59 /* GraphInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A2CDE8D223840B500922A59 /* GraphInfo.swift */; };
+		4A6AC7562242DC9F000564F1 /* RangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6AC7552242DC9F000564F1 /* RangeSlider.swift */; };
 		4A943A87224036A000E39F7C /* DateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A943A86224036A000E39F7C /* DateView.swift */; };
 		4A943A89224036B100E39F7C /* DateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A943A88224036B100E39F7C /* DateView.xib */; };
 		4AD427582237F5E200701EF0 /* chart_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 4AD427572237F5E200701EF0 /* chart_data.json */; };
@@ -21,11 +22,11 @@
 		4AD43B622235237500C0C903 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD43B612235237500C0C903 /* GraphView.swift */; };
 		4AD43B64223523E900C0C903 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD43B63223523E900C0C903 /* MainViewController.swift */; };
 		4AD43B6C223528D700C0C903 /* GraphView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AD43B6B223528D700C0C903 /* GraphView.xib */; };
-		4AD43B71223548B300C0C903 /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD43B70223548B300C0C903 /* MainCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4A2CDE8D223840B500922A59 /* GraphInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphInfo.swift; sourceTree = "<group>"; };
+		4A6AC7552242DC9F000564F1 /* RangeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RangeSlider.swift; sourceTree = "<group>"; };
 		4A943A86224036A000E39F7C /* DateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateView.swift; sourceTree = "<group>"; };
 		4A943A88224036B100E39F7C /* DateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateView.xib; sourceTree = "<group>"; };
 		4ACADC5D223938600044D301 /* TelegramContestRomanov.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TelegramContestRomanov.entitlements; sourceTree = "<group>"; };
@@ -42,7 +43,6 @@
 		4AD43B612235237500C0C903 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
 		4AD43B63223523E900C0C903 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		4AD43B6B223528D700C0C903 /* GraphView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GraphView.xib; sourceTree = "<group>"; };
-		4AD43B70223548B300C0C903 /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +56,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A6AC7542242DC35000564F1 /* Slider */ = {
+			isa = PBXGroup;
+			children = (
+				4A6AC7552242DC9F000564F1 /* RangeSlider.swift */,
+			);
+			path = Slider;
+			sourceTree = "<group>";
+		};
 		4ACADC5E223939020044D301 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -108,7 +116,6 @@
 				4AD43B662235240300C0C903 /* Controllers */,
 				4AD43B65223523FA00C0C903 /* View */,
 				4AD43B672235242200C0C903 /* Main */,
-				4AD43B6F2235414000C0C903 /* Cell */,
 				4AD43B5822351FF600C0C903 /* LaunchScreen.storyboard */,
 				4AD43B5B22351FF600C0C903 /* Info.plist */,
 				4AD43B5622351FF600C0C903 /* Assets.xcassets */,
@@ -119,6 +126,7 @@
 		4AD43B65223523FA00C0C903 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4A6AC7542242DC35000564F1 /* Slider */,
 				4AD43B612235237500C0C903 /* GraphView.swift */,
 				4AD43B6B223528D700C0C903 /* GraphView.xib */,
 				4A943A86224036A000E39F7C /* DateView.swift */,
@@ -142,14 +150,6 @@
 				4AD43B5322351FF200C0C903 /* Main.storyboard */,
 			);
 			path = Main;
-			sourceTree = "<group>";
-		};
-		4AD43B6F2235414000C0C903 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				4AD43B70223548B300C0C903 /* MainCollectionViewCell.swift */,
-			);
-			path = Cell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -242,7 +242,7 @@
 				4AD43B5022351FF200C0C903 /* AppDelegate.swift in Sources */,
 				4AD43B622235237500C0C903 /* GraphView.swift in Sources */,
 				4AD4275F223818EE00701EF0 /* ParseJson.swift in Sources */,
-				4AD43B71223548B300C0C903 /* MainCollectionViewCell.swift in Sources */,
+				4A6AC7562242DC9F000564F1 /* RangeSlider.swift in Sources */,
 				4A943A87224036A000E39F7C /* DateView.swift in Sources */,
 				4AD4275A2237F60E00701EF0 /* DayInfo.swift in Sources */,
 				4AD43B64223523E900C0C903 /* MainViewController.swift in Sources */,
