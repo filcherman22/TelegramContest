@@ -20,38 +20,18 @@ extension Date {
 
 class DateView: UIView {
     
-
-    @IBOutlet var dateView: UIView!
-    
     var arrLabel: [UILabel] = []
     var arrStepBack: [[Bool]] = []
     var countSaveArr: Int = 0
     var data: GraphInfo?
     let labelWidth: CGFloat = 70
-    let labelHeight: CGFloat = 18
-    let labelFontSize: CGFloat = 12
+    let labelHeight: CGFloat = 15
+    let labelFontSize: CGFloat = 10
     let alphaDuration: Double = 0.5
     var maxLabelsCount: Int = 0
     var maxWidth: CGFloat = 0
     var stepChoise: Int = 0
     var reactionAlpha: CGFloat = 0.4
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        customInit()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        customInit()
-    }
-    
-    private func customInit() {
-        Bundle.main.loadNibNamed("DateView", owner: self, options: nil)
-        addSubview(dateView)
-        dateView.frame = self.bounds
-        dateView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-    }
     
     func setDate(data: GraphInfo){
         self.arrLabel.removeAll()
@@ -72,6 +52,7 @@ class DateView: UIView {
                 label.text = self.data!.arrDayInfo[i].date.asString(style: .medium)
                 label.font = UIFont(name: "default", size: self.labelFontSize)
                 label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
+                label.textAlignment = .center
                 self.arrLabel.append(label)
             }
         }

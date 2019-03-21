@@ -25,8 +25,11 @@ class GraphView: UIView, CAAnimationDelegate{
     let verticalScaleDurationOnly: Double = 0.1
     var startWidth: CGFloat = 0
     var startStepY: CGFloat = 0
-    
-    @IBOutlet var graphView: UIView!
+    var arrLabel: [UILabel] = []
+    var arrLabelMaxCount: Int = 5
+    let labelFontSize: CGFloat = 12
+    let labelWidth: CGFloat = 50
+    let labelHeight: CGFloat = 15
     
     @IBAction func tapView(_ sender: UITapGestureRecognizer) {
         print("tap")
@@ -42,11 +45,53 @@ class GraphView: UIView, CAAnimationDelegate{
         customInit()
     }
     
+    override var frame: CGRect{
+        didSet{
+            if self.arrLabel.count > 0{
+                createStartCoord()
+            }
+        }
+    }
+    
     private func customInit() {
-        Bundle.main.loadNibNamed("GraphView", owner: self, options: nil)
-        addSubview(graphView)
-        graphView.frame = self.bounds
-        graphView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        createArrLabel()
+        createStartCoord()
+        addLabelInView()
+    }
+    
+    private func createArrLabel(){
+        print(self.arrLabelMaxCount)
+        for _ in 0...self.arrLabelMaxCount - 1{
+            let label: UILabel = UILabel()
+            label.alpha = 1
+            label.text = ""
+            label.font = UIFont(name: "default", size: self.labelFontSize)
+            label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
+            label.textAlignment = .left
+            self.arrLabel.append(label)
+        }
+    }
+    
+    private func createStartCoord(){
+        let x: CGFloat = 20
+        let yZero = yToRealPoint(value: 0)
+        print("zero = ", yZero)
+        let gridHeihgt = self.frame.height - self.deltaHeihgt - self.labelHeight
+        let gridStep = gridHeihgt / 4.0
+        var y: CGFloat = 0
+        for i in 0...self.arrLabel.count - 1{
+            arrLabel[i].frame.origin.x = x
+            y = yZero - gridStep * CGFloat(i)
+            arrLabel[i].frame.origin.y = y
+            arrLabel[self.arrLabelMaxCount - 1 - i].text = String(Int(y))
+            print(x, y)
+        }
+    }
+    
+    private func addLabelInView(){
+        for i in 0...self.arrLabel.count - 1{
+            addSubview(self.arrLabel[i])
+        }
     }
     
     private func createPath(nGraph: Int) -> UIBezierPath{
@@ -91,6 +136,11 @@ class GraphView: UIView, CAAnimationDelegate{
     private func yToRealPoint(value: Int) -> CGFloat{
         let value = self.frame.height - self.deltaHeihgt - CGFloat(value) * stepY
         return CGFloat(value)
+    }
+    
+    private func realPointToY(value: CGFloat) -> CGFloat{
+        let y = (self.frame.height - self.deltaHeihgt - value) / CGFloat(stepY)
+        return y
     }
     
     func setPoints(graph: GraphInfo){
