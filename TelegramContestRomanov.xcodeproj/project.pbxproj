@@ -13,7 +13,6 @@
 		4A943A89224036B100E39F7C /* DateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A943A88224036B100E39F7C /* DateView.xib */; };
 		4AD427582237F5E200701EF0 /* chart_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 4AD427572237F5E200701EF0 /* chart_data.json */; };
 		4AD4275A2237F60E00701EF0 /* DayInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD427592237F60E00701EF0 /* DayInfo.swift */; };
-		4AD4275D2237FC5400701EF0 /* DecodeStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD4275C2237FC5400701EF0 /* DecodeStructs.swift */; };
 		4AD4275F223818EE00701EF0 /* ParseJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD4275E223818EE00701EF0 /* ParseJson.swift */; };
 		4AD43B5022351FF200C0C903 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD43B4F22351FF200C0C903 /* AppDelegate.swift */; };
 		4AD43B5522351FF200C0C903 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4AD43B5322351FF200C0C903 /* Main.storyboard */; };
@@ -32,7 +31,6 @@
 		4ACADC5D223938600044D301 /* TelegramContestRomanov.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TelegramContestRomanov.entitlements; sourceTree = "<group>"; };
 		4AD427572237F5E200701EF0 /* chart_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; lineEnding = 0; name = chart_data.json; path = TelegramContestRomanov/chart_data.json; sourceTree = SOURCE_ROOT; };
 		4AD427592237F60E00701EF0 /* DayInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayInfo.swift; sourceTree = "<group>"; };
-		4AD4275C2237FC5400701EF0 /* DecodeStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeStructs.swift; sourceTree = "<group>"; };
 		4AD4275E223818EE00701EF0 /* ParseJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseJson.swift; sourceTree = "<group>"; };
 		4AD43B4C22351FF200C0C903 /* TelegramContestRomanov.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TelegramContestRomanov.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AD43B4F22351FF200C0C903 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -83,7 +81,6 @@
 			isa = PBXGroup;
 			children = (
 				4AD427592237F60E00701EF0 /* DayInfo.swift */,
-				4AD4275C2237FC5400701EF0 /* DecodeStructs.swift */,
 				4AD4275E223818EE00701EF0 /* ParseJson.swift */,
 				4A2CDE8D223840B500922A59 /* GraphInfo.swift */,
 			);
@@ -238,7 +235,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A2CDE8E223840B500922A59 /* GraphInfo.swift in Sources */,
-				4AD4275D2237FC5400701EF0 /* DecodeStructs.swift in Sources */,
 				4AD43B5022351FF200C0C903 /* AppDelegate.swift in Sources */,
 				4AD43B622235237500C0C903 /* GraphView.swift in Sources */,
 				4AD4275F223818EE00701EF0 /* ParseJson.swift in Sources */,

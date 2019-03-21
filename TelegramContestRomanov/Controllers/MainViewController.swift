@@ -16,18 +16,25 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     let heightGraphView: CGFloat = 200
     let heightDateView: CGFloat = 50
     
-    @IBAction func tapButton(_ sender: UIButton) {
-        self.scrollView.setContentOffset(CGPoint(x: self.scrollView.contentOffset.x - 100, y: 0), animated: true)
-    }
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var dateView: DateView!
     @IBOutlet weak var graphView: GraphView!
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBAction func sliderValueChanged(_ sender: UISlider) {
-        scaleWidth(width: self.widthGraph * Double(sender.value))
-    }
+    @IBOutlet weak var rangeSlider: RangeSlider!
+    
+    
     @IBAction func RangeSliderValueChanged(_ sender: RangeSlider) {
-        print(sender.lowerValue)
+        scaleWidth(width: Double(self.view.frame.width) * Double(1.0 / (sender.upperValue - sender.lowerValue)))
+        let contentIndex = scrollView.contentOffset.x
+        self.graphView.scaleVerticalGraph(contentOfSet: contentIndex, viewWidth: self.scrollView.frame.width)
+
+        if sender.lowerThumbLayer.highlighted{
+
+        }
+        else if sender.upperThumbLayer.highlighted{
+            
+        }
+        
     }
     
     override func viewDidLoad() {
@@ -38,13 +45,16 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func setSizeGraph(width: Double){
+        self.scrollView.contentSize = CGSize(width: CGFloat(width), height: self.scrollView.frame.height)
         self.graphView.setWidth(width: width, height: Double(self.scrollView.frame.height - self.heightDateView), contentOfSet: self.scrollView.contentOffset.x, viewWidth: self.scrollView.frame.width)
         self.dateView.setWidth(x: 0, y: self.scrollView.frame.height - self.heightDateView, width: CGFloat(width), height: self.heightDateView)
-        self.scrollView.contentSize = CGSize(width: CGFloat(width), height: self.scrollView.frame.height)
+        
     }
     
     func setGraph(n: Int){
         self.widthGraph = Double(self.scrollView.frame.width) / 31 * Double(self.dataGraph[n].arrDayInfo.count - 1)
+        self.rangeSlider.frame.size = CGSize(width: self.view.frame.width, height: self.rangeSlider.frame.height)
+        self.rangeSlider.setPointsValue(lower: 1.0 - self.view.frame.width / CGFloat(self.widthGraph), upper: 1.0)
         setSizeGraph(width: self.widthGraph)
         self.graphView.setPoints(graph: self.dataGraph[n])
         self.dateView.setDate(data: self.dataGraph[n])

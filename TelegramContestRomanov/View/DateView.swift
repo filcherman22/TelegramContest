@@ -12,10 +12,10 @@ import UIKit
 extension Date {
     func asString(style: DateFormatter.Style) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = style
+        dateFormatter.dateFormat = "MMM dd"
         let dateStr = dateFormatter.string(from: self)
-        let arrStr = dateStr.components(separatedBy: ",")
-        let date = arrStr[0]
+//        let arrStr = dateStr.components(separatedBy: ",")
+        let date = dateStr
         return date
     }
 }
@@ -31,7 +31,7 @@ class DateView: UIView {
     var data: GraphInfo?
     let labelWidth: CGFloat = 70
     let labelHeight: CGFloat = 18
-    let labelFontSize: CGFloat = 15
+    let labelFontSize: CGFloat = 12
     let alphaDuration: Double = 0.5
     var labelNumStart: CGFloat = 0
     var labelNum: CGFloat = 0{
@@ -43,22 +43,15 @@ class DateView: UIView {
                 if div > countSaveArr{
                     saveArrStepBack()
                 }
-                else if div < countSaveArr{
+                else if div < countSaveArr && div != 0{
                     self.arrStepBack.removeLast()
                     countSaveArr = countSaveArr - 1
                 }
                 if rest <= lineStop{
-                    lowerLabes(alpha: 1 - (rest / lineStop) )
+                    alphaLabes(alpha: 1 - (rest / lineStop) , numArr: div - 1)
                 }else{
-                    lowerLabes(alpha: 0)
+                    alphaLabes(alpha: 0 , numArr: div - 1)
                 }
-            
-                
-//                else if self.labelNum < oldValue && self.labelNum > self.labelNumStart{
-//                    if self.labelNum % labelNumStart == self.labelNumStart / 4{
-//                        moreLabes()
-//                    }
-//                }
             }
         }
     }
@@ -145,11 +138,11 @@ class DateView: UIView {
         }
     }
     
-    private func lowerLabes(alpha: CGFloat){
+    private func alphaLabes(alpha: CGFloat, numArr: Int){
 //        saveArrStepBack()
         var isEven: Bool = false
         for i in 1...self.arrLabel.count - 1{
-            if self.arrStepBack.last![i]{
+            if self.arrStepBack[numArr][i]{
                 if isEven{
                     UIView.animate(withDuration: alphaDuration) {
                         self.arrLabel[i].alpha = alpha

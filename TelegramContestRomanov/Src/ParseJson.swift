@@ -37,7 +37,6 @@ extension UIColor {
 
 class ParseJson {
     
-    var arrPoints: [DayInfo] = []
     var arrGraph: [GraphInfo] = []
     
     init() {
@@ -81,7 +80,7 @@ class ParseJson {
                 var dayInfoVar: DayInfoUni?
                 for i in 0...arrDayInfo.count - 2{
                     for j in i...arrDayInfo.count - 2{
-                        if arrDayInfo[j].date < arrDayInfo[j+1].date{
+                        if arrDayInfo[j].date > arrDayInfo[j+1].date{
                             dayInfoVar = arrDayInfo[j]
                             arrDayInfo[j] = arrDayInfo[j+1]
                             arrDayInfo[j+1] = dayInfoVar!

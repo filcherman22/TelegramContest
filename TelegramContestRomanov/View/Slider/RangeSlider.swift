@@ -21,7 +21,7 @@ class RangeSlider: UIControl {
     var minimumValue: CGFloat = 0
     var maximumValue: CGFloat = 1
     var lowerValue: CGFloat = 0.2
-    var upperValue: CGFloat = 0.8
+    var upperValue: CGFloat = 1
     
     var thumbWidth: CGFloat {
         return CGFloat(bounds.height)
@@ -44,8 +44,24 @@ class RangeSlider: UIControl {
     
     override var frame: CGRect {
         didSet {
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
             updateLayerFrames()
+            CATransaction.commit()
         }
+    }
+    
+    func setPointsValue(lower: CGFloat, upper: CGFloat){
+        lowerValue = lower
+        lowerValue = CGFloat(boundValue(value: Double(lowerValue), toLowerValue: Double(minimumValue), upperValue: Double(upperValue)))
+        upperValue = upper
+        upperValue = CGFloat(boundValue(value: Double(upperValue), toLowerValue: Double(lowerValue), upperValue: Double(maximumValue)))
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        
+        updateLayerFrames()
+        
+        CATransaction.commit()
     }
     
     private func initSettingsDefault(){

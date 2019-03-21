@@ -21,6 +21,7 @@ class GraphView: UIView, CAAnimationDelegate{
     var stepY: Double = 0
     var stepX: Double = 0
     var isBusy: Bool = false
+    let verticalScaleDuration: Double = 0.2
     
     @IBOutlet var graphView: UIView!
     
@@ -109,8 +110,8 @@ class GraphView: UIView, CAAnimationDelegate{
         if self.graph != nil{
             
             self.stepX = Double(self.frame.width) / Double((self.graph?.arrDayInfo.count)! - 1)
-            scaleVerticalGraph(contentOfSet: contentOfSet, viewWidth: viewWidth)
-//            reloadGraph(duration: 0)
+//            scaleVerticalGraph(contentOfSet: contentOfSet, viewWidth: viewWidth)
+            reloadGraph(duration: 0)
         }
     }
     
@@ -141,17 +142,20 @@ class GraphView: UIView, CAAnimationDelegate{
         }
         var max: Int = -1
         var maxVar:Int = 0
-        for i in startIndex...stopIndex{
-            maxVar = (self.graph?.arrDayInfo[i].arrY.max())!
-            if maxVar > max{
-                max = maxVar
+        if startIndex < stopIndex{
+            for i in startIndex...stopIndex{
+                maxVar = (self.graph?.arrDayInfo[i].arrY.max())!
+                if maxVar > max{
+                    max = maxVar
+                }
+            }
+            self.maxValueY = max
+            self.stepY = Double(self.frame.height - 2 * self.deltaHeihgt) / Double(self.maxValueY)
+            if !isBusy{
+                reloadGraph(duration: verticalScaleDuration)
             }
         }
-        self.maxValueY = max
-        self.stepY = Double(self.frame.height - 2 * self.deltaHeihgt) / Double(self.maxValueY)
-        if !isBusy{
-            reloadGraph(duration: 0.1)
-        }
+        
         
     }
     
