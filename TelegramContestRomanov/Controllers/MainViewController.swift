@@ -15,6 +15,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     var widthGraph: Double = 0
     let heightGraphView: CGFloat = 200
     let heightDateView: CGFloat = 50
+    let minCountDay: Int = 10
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var dateView: DateView!
@@ -52,7 +53,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func setGraph(n: Int){
-        self.widthGraph = Double(self.scrollView.frame.width) / 31 * Double(self.dataGraph[n].arrDayInfo.count - 1)
+        self.widthGraph = Double(self.scrollView.frame.width) / Double(self.minCountDay) * Double(self.dataGraph[n].arrDayInfo.count - 1)
         self.rangeSlider.frame.size = CGSize(width: self.view.frame.width, height: self.rangeSlider.frame.height)
         self.rangeSlider.setPointsValue(lower: 1.0 - self.view.frame.width / CGFloat(self.widthGraph), upper: 1.0)
         setSizeGraph(width: self.widthGraph)

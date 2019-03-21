@@ -21,7 +21,7 @@ class GraphView: UIView, CAAnimationDelegate{
     var stepY: Double = 0
     var stepX: Double = 0
     var isBusy: Bool = false
-    let verticalScaleDuration: Double = 0.2
+    let verticalScaleDuration: Double = 0.1
     
     @IBOutlet var graphView: UIView!
     

@@ -33,28 +33,10 @@ class DateView: UIView {
     let labelHeight: CGFloat = 18
     let labelFontSize: CGFloat = 12
     let alphaDuration: Double = 0.5
-    var labelNumStart: CGFloat = 0
-    var labelNum: CGFloat = 0{
-        didSet(oldValue){
-            if oldValue != 0{
-                let div = Int(self.labelNum / self.labelNumStart)
-                let rest: CGFloat = self.labelNum - CGFloat(Int(self.labelNum / self.labelNumStart)) * self.labelNumStart
-                let lineStop: CGFloat = self.labelNumStart / 4
-                if div > countSaveArr{
-                    saveArrStepBack()
-                }
-                else if div < countSaveArr && div != 0{
-                    self.arrStepBack.removeLast()
-                    countSaveArr = countSaveArr - 1
-                }
-                if rest <= lineStop{
-                    alphaLabes(alpha: 1 - (rest / lineStop) , numArr: div - 1)
-                }else{
-                    alphaLabes(alpha: 0 , numArr: div - 1)
-                }
-            }
-        }
-    }
+    var maxLabelsCount: Int = 0
+    var maxWidth: CGFloat = 0
+    var stepChoise: Int = 0
+    var reactionAlpha: CGFloat = 0.4
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -76,23 +58,24 @@ class DateView: UIView {
     func setDate(data: GraphInfo){
         self.arrLabel.removeAll()
         self.data = data
+        self.maxLabelsCount = Int(self.frame.width / self.labelWidth)
+        dateReload()
         createArrLabel()
+        self.maxWidth = CGFloat(self.arrLabel.count) * self.labelWidth
         createOriginCoord()
         addLabelToView()
-        dateReload()
-        setStartLabelsAlpha(n: Int(self.labelNum))
-        self.labelNumStart = self.labelNum
-        saveArrStepBack()
+        createArrSaves()
     }
     private func createArrLabel(){
-        
-        for el in (data?.arrDayInfo)!{
-            let label: UILabel = UILabel()
-            label.alpha = 0
-            label.text = el.date.asString(style: .medium)
-            label.font = UIFont(name: "default", size: self.labelFontSize)
-            label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
-            self.arrLabel.append(label)
+        for i in 0...self.data!.arrDayInfo.count - 1{
+            if i % Int(self.stepChoise) == 0{
+                let label: UILabel = UILabel()
+                label.alpha = 1
+                label.text = self.data!.arrDayInfo[i].date.asString(style: .medium)
+                label.font = UIFont(name: "default", size: self.labelFontSize)
+                label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
+                self.arrLabel.append(label)
+            }
         }
     }
     
@@ -104,8 +87,8 @@ class DateView: UIView {
     
     func createOriginCoord(){
         if self.data != nil{
-            let width: CGFloat = self.frame.width / CGFloat(((self.data?.arrDayInfo.count)! - 1))
-            for i in 0...(data?.arrDayInfo.count)! - 1{
+            let width: CGFloat = self.frame.width / CGFloat((self.arrLabel.count -  1))
+            for i in 0...self.arrLabel.count - 1{
                 self.arrLabel[i].center = CGPoint(x: width * CGFloat(i), y: self.frame.height / 2)
             }
         }
@@ -116,15 +99,14 @@ class DateView: UIView {
         self.frame = CGRect(x: x, y: y, width: width, height: height)
         if self.data != nil{
             dateReload()
+            reloadLabelsAlpha()
             createOriginCoord()
         }
         
     }
     
     func dateReload(){
-        let width = self.frame.width
-        let n = width / self.labelWidth
-        self.labelNum = CGFloat(self.arrLabel.count) / n + 1
+        self.stepChoise = self.data!.arrDayInfo.count / self.maxLabelsCount + 1
     }
     
     private func setStartLabelsAlpha(n: Int){
@@ -138,20 +120,18 @@ class DateView: UIView {
         }
     }
     
-    private func alphaLabes(alpha: CGFloat, numArr: Int){
-//        saveArrStepBack()
-        var isEven: Bool = false
-        for i in 1...self.arrLabel.count - 1{
-            if self.arrStepBack[numArr][i]{
-                if isEven{
-                    UIView.animate(withDuration: alphaDuration) {
-                        self.arrLabel[i].alpha = alpha
-                    }
-                    isEven = false
+    private func alphaLabes(alpha: CGFloat, numArr: Int, isLower: Bool){
+        for i in 0...self.arrLabel.count - 1{
+            if !self.arrStepBack[numArr][i] {
+                if self.arrStepBack[numArr - 1][i] != self.arrStepBack[numArr][i]{
+                    self.arrLabel[i].alpha = alpha
                 }
                 else{
-                    isEven = true
+                    self.arrLabel[i].alpha = 0
                 }
+            }
+            else{
+                self.arrLabel[i].alpha = 1
             }
         }
     }
@@ -170,19 +150,42 @@ class DateView: UIView {
         self.countSaveArr = self.arrStepBack.count
     }
     
-    private func moreLabes(){
-        for i in 0...self.arrStepBack.last!.count - 1{
-            if self.arrStepBack.last![i] {
-                UIView.animate(withDuration: self.alphaDuration) {
-                    self.arrLabel[i].alpha = 1
+    private func createArrSaves(){
+        var newArr: [Bool] = Array(repeating: true, count: self.arrLabel.count)
+        self.arrStepBack.append(newArr)
+        
+        var isEven = true
+        while newArr.firstIndex(of: true) != nil {
+            for i in 0...newArr.count - 1{
+                if newArr[i]{
+                    if isEven{
+                        newArr[i] = false
+                        isEven = false
+                    }
+                    else{
+                        isEven = true
+                    }
                 }
+            }
+            self.arrStepBack.append(newArr)
+        }
+    }
+    
+    private func reloadLabelsAlpha(){
+        let div = Int(self.maxWidth / self.frame.width)
+        if div == 0{
+            return
+        }
+        if log2(Double(div)) - Double(Int(log2(Double(div)))) == 0 || div == 1{
+            let numArr: Int = Int(log2(Double(div))) + 1
+            let rest = self.maxWidth - CGFloat(div) * self.frame.width
+            if rest / self.frame.width < self.reactionAlpha{
+                alphaLabes(alpha: 1 - (rest / self.frame.width * (1.0 / self.reactionAlpha)), numArr: numArr, isLower: true)
             }
             else{
-                UIView.animate(withDuration: self.alphaDuration) {
-                    self.arrLabel[i].alpha = 0
-                }
+                alphaLabes(alpha: 0, numArr: numArr, isLower: true)
             }
         }
-        self.arrStepBack.removeLast()
     }
+    
 }
