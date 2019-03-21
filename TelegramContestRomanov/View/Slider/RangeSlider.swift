@@ -66,7 +66,7 @@ class RangeSlider: UIControl {
     
     private func initSettingsDefault(){
         trackLayer.backgroundColor = UIColor.blue.cgColor
-        layer.addSublayer(trackLayer)
+//        layer.addSublayer(trackLayer)
         lowerThumbLayer.backgroundColor = UIColor.green.cgColor
         layer.addSublayer(lowerThumbLayer)
         upperThumbLayer.backgroundColor = UIColor.green.cgColor

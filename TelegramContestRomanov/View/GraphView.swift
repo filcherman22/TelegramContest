@@ -12,7 +12,7 @@ class GraphView: UIView, CAAnimationDelegate{
     
     
     
-    let deltaHeihgt: CGFloat = 30;
+    let deltaHeihgt: CGFloat = 2;
     var shapeLayer: [CAShapeLayer] = []
     var path: [UIBezierPath] = []
     var arrPoint: [[CGPoint]] = []
@@ -22,6 +22,7 @@ class GraphView: UIView, CAAnimationDelegate{
     var stepX: Double = 0
     var isBusy: Bool = false
     let verticalScaleDuration: Double = 0.1
+    var startWidth: CGFloat = 0
     
     @IBOutlet var graphView: UIView!
     
@@ -34,13 +35,11 @@ class GraphView: UIView, CAAnimationDelegate{
     override init(frame: CGRect) {
         super.init(frame: frame)
         customInit()
-//        createGraph()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         customInit()
-//        createGraph()
     }
     
     private func customInit() {
@@ -95,6 +94,7 @@ class GraphView: UIView, CAAnimationDelegate{
     }
     
     func setPoints(graph: GraphInfo){
+        self.startWidth = self.frame.width
         self.graph = graph
         getMax()
         self.stepY = Double(self.frame.height - 2 * self.deltaHeihgt) / Double(self.maxValueY)
@@ -108,10 +108,15 @@ class GraphView: UIView, CAAnimationDelegate{
     func setWidth(width: Double, height: Double, contentOfSet: CGFloat, viewWidth: CGFloat){
         self.frame = CGRect(x: 0, y: 0, width: width, height: height)
         if self.graph != nil{
-            
             self.stepX = Double(self.frame.width) / Double((self.graph?.arrDayInfo.count)! - 1)
-//            scaleVerticalGraph(contentOfSet: contentOfSet, viewWidth: viewWidth)
-            reloadGraph(duration: 0)
+//            reloadGraphNoAnimation()
+            reloadGraph(duration: 0.0)
+        }
+    }
+    
+    private func reloadGraphNoAnimation(){
+        for i in 0...(self.graph?.arrLineName.count)! - 1{
+            self.shapeLayer[i].transform = CATransform3DMakeScale(self.frame.width / self.startWidth, 1, 1)
         }
     }
     

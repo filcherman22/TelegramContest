@@ -14,9 +14,7 @@ extension Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd"
         let dateStr = dateFormatter.string(from: self)
-//        let arrStr = dateStr.components(separatedBy: ",")
-        let date = dateStr
-        return date
+        return dateStr
     }
 }
 
