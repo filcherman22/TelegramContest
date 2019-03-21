@@ -22,7 +22,7 @@ class GraphView: UIView, CAAnimationDelegate{
     var stepX: Double = 0
     var isBusy: Bool = false
     let verticalScaleDurationWithWidth: Double = 0.001
-    let verticalScaleDurationOnly: Double = 0.2
+    let verticalScaleDurationOnly: Double = 0.1
     var startWidth: CGFloat = 0
     var startStepY: CGFloat = 0
     
