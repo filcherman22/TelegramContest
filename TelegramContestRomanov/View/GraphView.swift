@@ -18,17 +18,17 @@ class GraphView: UIView, CAAnimationDelegate{
     var arrPoint: [[CGPoint]] = []
     var graph: GraphInfo?
     var maxValueY: Int = 0
-    var stepY: Double = 0
+    var stepY: CGFloat = 0
     var stepX: Double = 0
     var isBusy: Bool = false
-    let verticalScaleDuration: Double = 0.1
+    let verticalScaleDurationWithWidth: Double = 0.001
+    let verticalScaleDurationOnly: Double = 0.2
     var startWidth: CGFloat = 0
+    var startStepY: CGFloat = 0
     
     @IBOutlet var graphView: UIView!
     
     @IBAction func tapView(_ sender: UITapGestureRecognizer) {
-//        self.stepY = self.stepY - 1
-//        reloadGraph(duration: 3)
         print("tap")
     }
     
@@ -89,7 +89,7 @@ class GraphView: UIView, CAAnimationDelegate{
     }
     
     private func yToRealPoint(value: Int) -> CGFloat{
-        let value = self.frame.height - self.deltaHeihgt - CGFloat(Double(value) * stepY)
+        let value = self.frame.height - self.deltaHeihgt - CGFloat(value) * stepY
         return CGFloat(value)
     }
     
@@ -97,7 +97,8 @@ class GraphView: UIView, CAAnimationDelegate{
         self.startWidth = self.frame.width
         self.graph = graph
         getMax()
-        self.stepY = Double(self.frame.height - 2 * self.deltaHeihgt) / Double(self.maxValueY)
+        self.stepY = (self.frame.height - 2 * self.deltaHeihgt) / CGFloat(self.maxValueY)
+        self.startStepY = self.stepY
         self.stepX = Double(self.frame.width) / Double((self.graph?.arrDayInfo.count)! - 1)
         for i in 0...(self.graph?.arrLineName.count)!-1{
             createGraph(nGraph: i)
@@ -109,14 +110,19 @@ class GraphView: UIView, CAAnimationDelegate{
         self.frame = CGRect(x: 0, y: 0, width: width, height: height)
         if self.graph != nil{
             self.stepX = Double(self.frame.width) / Double((self.graph?.arrDayInfo.count)! - 1)
-//            reloadGraphNoAnimation()
-            reloadGraph(duration: 0.0)
+            reloadGraphNoAnimation()
         }
     }
     
     private func reloadGraphNoAnimation(){
         for i in 0...(self.graph?.arrLineName.count)! - 1{
-            self.shapeLayer[i].transform = CATransform3DMakeScale(self.frame.width / self.startWidth, 1, 1)
+            self.shapeLayer[i].path = createPath(nGraph: i).cgPath
+        }
+    }
+    
+    private func reloadHeightScale(){
+        for i in 0...(self.graph?.arrLineName.count)! - 1{
+            self.shapeLayer[i].transform = CATransform3DMakeScale(1, CGFloat(self.stepY) / self.startStepY, 1)
         }
     }
     
@@ -132,11 +138,9 @@ class GraphView: UIView, CAAnimationDelegate{
             animation.delegate = self
             shapeLayer[i].add(animation, forKey: nil)
         }
-        
-        
     }
     
-    func scaleVerticalGraph(contentOfSet: CGFloat, viewWidth: CGFloat){
+    func scaleVerticalGraph(contentOfSet: CGFloat, viewWidth: CGFloat, isSetHeightOnly: Bool){
         var startIndex: Int = Int(Double(contentOfSet) / self.stepX) - 1
         if startIndex < 0{
             startIndex = 0
@@ -155,13 +159,19 @@ class GraphView: UIView, CAAnimationDelegate{
                 }
             }
             self.maxValueY = max
-            self.stepY = Double(self.frame.height - 2 * self.deltaHeihgt) / Double(self.maxValueY)
+            self.stepY = (self.frame.height - 2 * self.deltaHeihgt) / CGFloat(self.maxValueY)
             if !isBusy{
-                reloadGraph(duration: verticalScaleDuration)
+                var duration = 0.0
+                if isSetHeightOnly {
+                    duration = self.verticalScaleDurationOnly
+                }
+                else{
+                    duration = self.verticalScaleDurationWithWidth
+                }
+                reloadGraph(duration: duration)
+//                reloadHeightScale()
             }
         }
-        
-        
     }
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
@@ -171,6 +181,5 @@ class GraphView: UIView, CAAnimationDelegate{
     func animationDidStart(_ anim: CAAnimation) {
         isBusy = true
     }
-    
     
 }

@@ -16,6 +16,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     let heightGraphView: CGFloat = 200
     let heightDateView: CGFloat = 50
     let minCountDay: Int = 30
+    var isSetHeight: Bool = false
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var dateView: DateView!
@@ -25,11 +26,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     
     
     @IBAction func RangeSliderValueChanged(_ sender: RangeSlider) {
+        isSetHeight = true
         scaleWidth(width: Double(self.view.frame.width) * Double(1.0 / (sender.upperValue - sender.lowerValue)))
-        self.scrollView.contentOffset.x = sender.lowerValue * self.scrollView.contentSize.width
         let contentIndex = scrollView.contentOffset.x
-//        self.graphView.scaleVerticalGraph(contentOfSet: contentIndex, viewWidth: self.scrollView.frame.width)
-        
+        self.graphView.scaleVerticalGraph(contentOfSet: contentIndex, viewWidth: self.scrollView.frame.width, isSetHeightOnly: false)
+        self.scrollView.contentOffset.x = sender.lowerValue * self.scrollView.contentSize.width
+        isSetHeight = false
     }
     
     override func viewDidLoad() {
@@ -69,8 +71,9 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         if contentIndex > self.scrollView.contentSize.width - self.scrollView.frame.width{
             self.scrollView.contentOffset.x = self.scrollView.contentSize.width - self.scrollView.frame.width
         }
-//        self.graphView.scaleVerticalGraph(contentOfSet: contentIndex, viewWidth: self.scrollView.frame.width)
-        
+        if !isSetHeight{
+            self.graphView.scaleVerticalGraph(contentOfSet: contentIndex, viewWidth: self.scrollView.frame.width, isSetHeightOnly: true)
+        }
     }
     
     
