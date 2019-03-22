@@ -209,5 +209,6 @@ class RangeSlider: UIControl {
         lowerThumbLayer.highlighted = false
         upperThumbLayer.highlighted = false
         centerThumbLayer.highlighted = false
+        sendActions(for: .touchUpOutside)
     }
 }

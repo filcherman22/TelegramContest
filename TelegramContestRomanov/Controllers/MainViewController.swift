@@ -8,8 +8,19 @@
 
 import UIKit
 
+extension UIImage {
+    convenience init(view: UIView) {
+        UIGraphicsBeginImageContext(view.frame.size)
+        view.layer.render(in:UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        self.init(cgImage: image!.cgImage!)
+    }
+}
 
-class MainViewController: UIViewController, UIScrollViewDelegate {
+class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource {
+    
+    let choiseGraph: Int = 4
     
     var dataGraph: [GraphInfo] = []
     var widthGraph: Double = 0
@@ -23,8 +34,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var graphView: GraphView!
     @IBOutlet weak var graphViewSmall: GraphView!
     @IBOutlet weak var rangeSlider: RangeSlider!
+    @IBOutlet weak var tableView: UITableView!
     
     
+    @IBAction func RangeSliderOutSide(_ sender: RangeSlider) {
+        self.dateView.clearLabelsAplpha()
+    }
     @IBAction func RangeSliderValueChanged(_ sender: RangeSlider) {
         
         if !sender.centerThumbLayer.highlighted{
@@ -43,7 +58,11 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         let dataJson = ParseJson()
         self.dataGraph = dataJson.getArrPoint()
-        setGraph(n: 0)
+        setGraph(n: self.choiseGraph)
+    }
+    
+    private func createViewInContentView(){
+        
     }
     
     func setSizeGraph(width: Double){
@@ -82,5 +101,34 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    // Table View
     
+    
+    
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.dataGraph[self.choiseGraph].arrLineName.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "chCell", for: indexPath)
+        cell.accessoryType = .checkmark
+        cell.textLabel?.text = self.dataGraph[self.choiseGraph].arrLineName[indexPath.row]
+        let viewToImage = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
+        viewToImage.backgroundColor = self.dataGraph[self.choiseGraph].arrLineColor[indexPath.row]
+        viewToImage.layer.cornerRadius = viewToImage.frame.height / 2
+        let image: UIImage = UIImage(view: viewToImage)
+        cell.imageView?.image = image
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark{
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        }
+        else{
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        }
+        tableView.cellForRow(at: indexPath)?.isSelected = false
+    }
 }

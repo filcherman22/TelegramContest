@@ -168,4 +168,20 @@ class DateView: UIView {
         }
     }
     
+    func clearLabelsAplpha(){
+        if self.arrLabel.count > 0{
+            for i in 0...self.arrLabel.count - 1{
+                if self.arrLabel[i].alpha < self.labelAlpha && self.arrLabel[i].alpha != 0{
+                    UIView.animate(withDuration: 0.2) {
+                        if self.labelAlpha / self.arrLabel[i].alpha >= 2.0{
+                            self.arrLabel[i].alpha = 0
+                        }
+                        else{
+//                            self.arrLabel[i].alpha = self.labelAlpha
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
