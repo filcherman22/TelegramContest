@@ -24,15 +24,23 @@ class DateView: UIView {
     var arrStepBack: [[Bool]] = []
     var countSaveArr: Int = 0
     var data: GraphInfo?
-    let labelWidth: CGFloat = 70
-    let labelHeight: CGFloat = 18
-    let labelFontSize: CGFloat = 15
+    let labelWidth: CGFloat = 60
+    let labelHeight: CGFloat = 15
+    let labelFontSize: CGFloat = 12
     let labelAlpha: CGFloat = 0.5
     let alphaDuration: Double = 0.5
     var maxLabelsCount: Int = 0
     var maxWidth: CGFloat = 0
     var stepChoise: Int = 0
     var reactionAlpha: CGFloat = 0.4
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
     
     func setDate(data: GraphInfo){
         self.arrLabel.removeAll()

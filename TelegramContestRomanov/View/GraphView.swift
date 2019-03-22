@@ -36,20 +36,21 @@ class GraphView: UIView, CAAnimationDelegate{
     let labelWidth: CGFloat = 50
     let labelHeight: CGFloat = 15
     let labelAlpha: CGFloat = 0.5
-    let leftWidthDelta: CGFloat = 10
+    let leftWidthDelta: CGFloat = 0
     var verticalGrid: Bool = false
     var isFullScreen: Bool = true
+    var arrHiddenNum: [Int] = []
     
     @IBAction func tapView(_ sender: UITapGestureRecognizer) {
         print("tap")
     }
     
-    override var frame: CGRect{
-        didSet{
-            if self.arrLabel.count > 0{
-//                createStartCoord()
-            }
-        }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
     private func verticalGridInit() {
@@ -309,12 +310,17 @@ class GraphView: UIView, CAAnimationDelegate{
         }
         var max: Int = -1
         var maxVar:Int = 0
+        var arrYValue: [Int] = []
         if startIndex < stopIndex{
             for i in startIndex...stopIndex{
-                maxVar = (self.graph?.arrDayInfo[i].arrY.max())!
-                if maxVar > max{
-                    max = maxVar
+                arrYValue = (self.graph?.arrDayInfo[i].arrY)!
+                for el in self.arrHiddenNum{
+                    arrYValue[el] = -1
                 }
+                maxVar = arrYValue.max()!
+                    if maxVar > max{
+                        max = maxVar
+                    }
             }
             let oldMaxValue = self.maxValueY
             self.maxValueY = max
@@ -352,6 +358,28 @@ class GraphView: UIView, CAAnimationDelegate{
     
     func animationDidStart(_ anim: CAAnimation) {
         isBusy = true
+    }
+    
+    func setGraphHidden(names: [String]){
+        self.arrHiddenNum.removeAll()
+        for name in names{
+            let index = (self.graph?.arrLineName.firstIndex(of: name))
+            if index != nil{
+                self.arrHiddenNum.append(index!)
+            }
+        }
+        hiddenLayers()
+    }
+    
+    private func hiddenLayers(){
+        for i in 0...self.shapeLayer.count - 1{
+            if self.arrHiddenNum.firstIndex(of: i) != nil{
+                self.shapeLayer[i].opacity = 0.0
+            }
+            else{
+                self.shapeLayer[i].opacity = 1.0
+            }
+        }
     }
     
 }

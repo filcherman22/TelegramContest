@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8FE-M8-nwC">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -19,12 +19,50 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="4Od-R3-dHk"/>
+                        <segue destination="LRL-Gq-kJU" kind="relationship" relationship="rootViewController" id="j5Y-QI-pit"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z1X-Xs-3fk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1395" y="-624"/>
+            <point key="canvasLocation" x="-1858" y="-626"/>
+        </scene>
+        <!--Start Table View Controller-->
+        <scene sceneID="SIX-VP-FFh">
+            <objects>
+                <tableViewController id="LRL-Gq-kJU" customClass="StartTableViewController" customModule="TelegramContestRomanov" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Umv-pu-acu">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="ilA-Ua-Afz">
+                            <rect key="frame" x="0.0" y="78" width="375" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="chioseChartCell" id="3d8-LC-Ciw">
+                                <rect key="frame" x="0.0" y="28" width="375" height="50"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3d8-LC-Ciw" id="I1p-q7-y2f">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <sections/>
+                        <connections>
+                            <outlet property="dataSource" destination="LRL-Gq-kJU" id="xmB-L5-Uva"/>
+                            <outlet property="delegate" destination="LRL-Gq-kJU" id="Xi6-mj-o4k"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="gum-oL-NaP"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="toViewGraph" id="HXA-7h-Lsx"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iOT-uA-s7m" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-918" y="-627"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -34,62 +72,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Rh-l7-36I">
-                                <rect key="frame" x="0.0" y="122" width="375" height="248"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YHf-eB-47s" customClass="GraphView" customModule="TelegramContestRomanov" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </view>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BW0-WY-3EB" customClass="DateView" customModule="TelegramContestRomanov" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="208" width="375" height="128"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </view>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="height" priority="500" constant="350" id="Kfv-wQ-HdB"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="yUe-1S-KHp"/>
-                                </connections>
-                            </scrollView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b9b-Lg-fER" customClass="GraphView" customModule="TelegramContestRomanov" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="427" width="375" height="50"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGp-nI-LVH" customClass="RangeSlider" customModule="TelegramContestRomanov" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="427" width="375" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="a5d-50-oK8"/>
-                                </constraints>
-                                <connections>
-                                    <action selector="RangeSliderOutSide:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="5ys-gr-r14"/>
-                                    <action selector="RangeSliderValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="eHR-qN-hSs"/>
-                                </connections>
-                            </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jqa-98-bPM">
-                                <rect key="frame" x="0.0" y="477" width="375" height="100"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="Em1-Bt-w6A"/>
-                                </constraints>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="chCell" id="yTg-lu-gX5">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yTg-lu-gX5" id="Zda-Qf-XaD">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="DfZ-Qd-5Xr"/>
-                                    <outlet property="delegate" destination="BYZ-38-t0r" id="uel-E0-6dv"/>
-                                </connections>
-                            </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="upu-wh-8b1">
                                 <rect key="frame" x="0.0" y="597" width="375" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -107,37 +89,97 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cfo-9l-NYW" userLabel="contentView">
+                                <rect key="frame" x="0.0" y="112" width="375" height="465"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Rh-l7-36I">
+                                        <rect key="frame" x="10" y="0.0" width="355" height="315"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="BYZ-38-t0r" id="yUe-1S-KHp"/>
+                                        </connections>
+                                    </scrollView>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jqa-98-bPM">
+                                        <rect key="frame" x="0.0" y="365" width="375" height="100"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="Y7o-Re-rHh"/>
+                                        </constraints>
+                                        <view key="tableFooterView" contentMode="scaleToFill" id="O30-h9-fyL">
+                                            <rect key="frame" x="0.0" y="78" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                        <prototypes>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="chCell" id="yTg-lu-gX5">
+                                                <rect key="frame" x="0.0" y="28" width="375" height="50"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yTg-lu-gX5" id="Zda-Qf-XaD">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="BYZ-38-t0r" id="DfZ-Qd-5Xr"/>
+                                            <outlet property="delegate" destination="BYZ-38-t0r" id="uel-E0-6dv"/>
+                                        </connections>
+                                    </tableView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b9b-Lg-fER" customClass="GraphView" customModule="TelegramContestRomanov" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="315" width="375" height="50"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bGp-nI-LVH" customClass="RangeSlider" customModule="TelegramContestRomanov" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                                <connections>
+                                                    <action selector="RangeSliderOutSide:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="5ys-gr-r14"/>
+                                                    <action selector="RangeSliderValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="eHR-qN-hSs"/>
+                                                </connections>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="TM9-Ej-7nI"/>
+                                            <constraint firstItem="bGp-nI-LVH" firstAttribute="leading" secondItem="b9b-Lg-fER" secondAttribute="leading" id="dw6-aH-weM"/>
+                                            <constraint firstItem="bGp-nI-LVH" firstAttribute="top" secondItem="b9b-Lg-fER" secondAttribute="top" id="iPw-At-Yjz"/>
+                                            <constraint firstAttribute="bottom" secondItem="bGp-nI-LVH" secondAttribute="bottom" id="kiI-kl-eQc"/>
+                                            <constraint firstAttribute="trailing" secondItem="bGp-nI-LVH" secondAttribute="trailing" id="wY5-ge-JTU"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="b9b-Lg-fER" firstAttribute="top" secondItem="1Rh-l7-36I" secondAttribute="bottom" id="4Qd-xY-4En"/>
+                                    <constraint firstAttribute="trailing" secondItem="jqa-98-bPM" secondAttribute="trailing" id="Cd8-uF-KTe"/>
+                                    <constraint firstItem="jqa-98-bPM" firstAttribute="top" secondItem="b9b-Lg-fER" secondAttribute="bottom" id="LNZ-qS-u5P"/>
+                                    <constraint firstAttribute="trailing" secondItem="b9b-Lg-fER" secondAttribute="trailing" id="NOu-St-z6S"/>
+                                    <constraint firstAttribute="trailing" secondItem="1Rh-l7-36I" secondAttribute="trailing" constant="10" id="O6a-Lo-1rB"/>
+                                    <constraint firstItem="jqa-98-bPM" firstAttribute="leading" secondItem="Cfo-9l-NYW" secondAttribute="leading" id="RqH-Pn-2en"/>
+                                    <constraint firstItem="1Rh-l7-36I" firstAttribute="top" secondItem="Cfo-9l-NYW" secondAttribute="top" id="WRQ-CQ-Tcy"/>
+                                    <constraint firstAttribute="bottom" secondItem="jqa-98-bPM" secondAttribute="bottom" id="Z5w-qU-aWV"/>
+                                    <constraint firstItem="1Rh-l7-36I" firstAttribute="leading" secondItem="Cfo-9l-NYW" secondAttribute="leading" constant="10" id="fYr-6B-IJK"/>
+                                    <constraint firstItem="b9b-Lg-fER" firstAttribute="leading" secondItem="Cfo-9l-NYW" secondAttribute="leading" id="gUm-Fx-7Uw"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="upu-wh-8b1" secondAttribute="bottom" constant="20" id="1b7-NZ-kA1"/>
                             <constraint firstItem="ifs-1c-YlS" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="5yy-fq-4yH"/>
-                            <constraint firstItem="1Rh-l7-36I" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="8t3-pz-hSU"/>
+                            <constraint firstItem="Cfo-9l-NYW" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="6vN-8K-LEi"/>
                             <constraint firstItem="upu-wh-8b1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="9Rl-8c-TRt"/>
-                            <constraint firstItem="1Rh-l7-36I" firstAttribute="top" secondItem="ifs-1c-YlS" secondAttribute="bottom" constant="10" id="D4x-oI-dQZ"/>
                             <constraint firstItem="upu-wh-8b1" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="FRX-bj-0Vv"/>
-                            <constraint firstItem="bGp-nI-LVH" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="GNG-BS-fOg"/>
-                            <constraint firstItem="b9b-Lg-fER" firstAttribute="top" secondItem="1Rh-l7-36I" secondAttribute="bottom" id="KTe-CW-QfG"/>
-                            <constraint firstItem="jqa-98-bPM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="LyF-NK-kef"/>
-                            <constraint firstItem="bGp-nI-LVH" firstAttribute="bottom" secondItem="b9b-Lg-fER" secondAttribute="bottom" id="MJL-Kz-W0B"/>
-                            <constraint firstItem="bGp-nI-LVH" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="MfQ-g6-c4M"/>
+                            <constraint firstItem="Cfo-9l-NYW" firstAttribute="top" secondItem="ifs-1c-YlS" secondAttribute="bottom" constant="10" id="Fx2-o2-7r9"/>
                             <constraint firstItem="ifs-1c-YlS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="OmQ-BC-3pe"/>
-                            <constraint firstItem="bGp-nI-LVH" firstAttribute="top" secondItem="1Rh-l7-36I" secondAttribute="bottom" id="R0c-hG-nws"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ifs-1c-YlS" secondAttribute="trailing" id="Sxc-b9-bMK"/>
-                            <constraint firstItem="jqa-98-bPM" firstAttribute="top" secondItem="b9b-Lg-fER" secondAttribute="bottom" id="Tgr-v2-Qha"/>
-                            <constraint firstItem="upu-wh-8b1" firstAttribute="top" secondItem="jqa-98-bPM" secondAttribute="bottom" constant="20" id="X7N-8p-SMQ"/>
-                            <constraint firstItem="b9b-Lg-fER" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ZRV-Y9-qCt"/>
-                            <constraint firstItem="jqa-98-bPM" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="drK-Du-kRY"/>
-                            <constraint firstItem="b9b-Lg-fER" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="hLM-aH-Vez"/>
-                            <constraint firstItem="1Rh-l7-36I" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="oXh-p0-yJC"/>
+                            <constraint firstItem="Cfo-9l-NYW" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="V2m-h5-xZo"/>
+                            <constraint firstItem="upu-wh-8b1" firstAttribute="top" secondItem="Cfo-9l-NYW" secondAttribute="bottom" constant="20" id="gNb-rP-Pgm"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="Kdx-mn-khn"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
-                        <outlet property="dateView" destination="BW0-WY-3EB" id="HIu-ZD-YOZ"/>
-                        <outlet property="graphView" destination="YHf-eB-47s" id="1z9-El-Ogm"/>
                         <outlet property="graphViewSmall" destination="b9b-Lg-fER" id="ztc-Bg-wX3"/>
+                        <outlet property="heightTableViewConstraint" destination="Y7o-Re-rHh" id="D8v-Ps-98p"/>
                         <outlet property="rangeSlider" destination="bGp-nI-LVH" id="7Im-2X-0ht"/>
                         <outlet property="scrollView" destination="1Rh-l7-36I" id="kAC-d8-Djk"/>
                         <outlet property="tableView" destination="jqa-98-bPM" id="kAx-Ea-gkW"/>
