@@ -12,10 +12,11 @@ class GraphView: UIView, CAAnimationDelegate{
     
     
     
-    let deltaHeihgt: CGFloat = 2;
+    var deltaHeihgt: CGFloat = 20
+    var deltaHeightLower: CGFloat = 20
+    let deltaLabelUpper: CGFloat = 5
     var shapeLayer: [CAShapeLayer] = []
     var path: [UIBezierPath] = []
-    var arrPoint: [[CGPoint]] = []
     var graph: GraphInfo?
     var maxValueY: Int = 0
     var stepY: CGFloat = 0
@@ -26,65 +27,103 @@ class GraphView: UIView, CAAnimationDelegate{
     var startWidth: CGFloat = 0
     var startStepY: CGFloat = 0
     var arrLabel: [UILabel] = []
+    var arrCoordLabel: [CGPoint] = []
+    var arrLineShape: [CAShapeLayer] = []
+    let lineAlpha: Float = 0.2
+    var lineWidht: CGFloat = 0.0
     var arrLabelMaxCount: Int = 5
     let labelFontSize: CGFloat = 12
     let labelWidth: CGFloat = 50
     let labelHeight: CGFloat = 15
+    let labelAlpha: CGFloat = 0.5
+    let leftWidthDelta: CGFloat = 10
+    var verticalGrid: Bool = false
+    var isFullScreen: Bool = true
     
     @IBAction func tapView(_ sender: UITapGestureRecognizer) {
         print("tap")
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        customInit()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        customInit()
-    }
-    
     override var frame: CGRect{
         didSet{
             if self.arrLabel.count > 0{
-                createStartCoord()
+//                createStartCoord()
             }
         }
     }
     
-    private func customInit() {
+    private func verticalGridInit() {
         createArrLabel()
         createStartCoord()
-        addLabelInView()
     }
     
     private func createArrLabel(){
-        print(self.arrLabelMaxCount)
+        self.arrLabel.removeAll()
         for _ in 0...self.arrLabelMaxCount - 1{
             let label: UILabel = UILabel()
-            label.alpha = 1
+            label.alpha = self.labelAlpha
             label.text = ""
-            label.font = UIFont(name: "default", size: self.labelFontSize)
             label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
+            label.font = UIFont.systemFont(ofSize: self.labelFontSize)
             label.textAlignment = .left
             self.arrLabel.append(label)
         }
     }
     
     private func createStartCoord(){
-        let x: CGFloat = 20
-        let yZero = yToRealPoint(value: 0)
-        print("zero = ", yZero)
-        let gridHeihgt = self.frame.height - self.deltaHeihgt - self.labelHeight
+        self.arrCoordLabel.removeAll()
+        let x: CGFloat = self.leftWidthDelta
+        let yZero = yToRealPoint(y: 0)
+        let gridHeihgt = self.frame.height - self.deltaHeihgt - self.deltaHeightLower - self.labelHeight - self.deltaLabelUpper
         let gridStep = gridHeihgt / 4.0
         var y: CGFloat = 0
         for i in 0...self.arrLabel.count - 1{
             arrLabel[i].frame.origin.x = x
             y = yZero - gridStep * CGFloat(i)
             arrLabel[i].frame.origin.y = y
-            arrLabel[self.arrLabelMaxCount - 1 - i].text = String(Int(y))
-            print(x, y)
+            arrLabel[i].text = String(Int(realPointToY(value: y)))
+            self.arrCoordLabel.append(CGPoint(x: x, y: y))
+        }
+    }
+    
+    private func createShapeLayers(width: CGFloat){
+        self.arrLineShape.removeAll()
+        for i in 0...self.arrCoordLabel.count - 1{
+            self.arrLineShape.append(CAShapeLayer())
+            self.arrLineShape[i].path = createLinesPath(i: i, x: 0.0).cgPath
+            self.arrLineShape[i].strokeColor = UIColor.black.cgColor
+            self.arrLineShape[i].fillColor = UIColor.clear.cgColor
+            self.arrLineShape[i].lineWidth = 0.5
+            self.arrLineShape[i].opacity = self.lineAlpha
+            self.arrLineShape[i].position = CGPoint(x: 0, y: self.deltaHeihgt + self.deltaLabelUpper - 10)
+        }
+    }
+    private func createLinesPath(i: Int, x: CGFloat) -> UIBezierPath{
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: x + self.leftWidthDelta, y: self.arrCoordLabel[i].y))
+        path.addLine(to: CGPoint(x: x + self.lineWidht + self.leftWidthDelta, y: self.arrCoordLabel[i].y))
+        return path
+    }
+    
+    private func createFakeLinePath(i: Int, x: CGFloat, isScaleUpper: Bool) -> UIBezierPath{
+        
+        var n: CGFloat = 0
+        if isScaleUpper{
+            n = -1.0
+        }
+        else{
+            n = 1.0
+        }
+        let path = UIBezierPath()
+        let delta: CGFloat = 50.0
+        path.move(to: CGPoint(x: x + self.leftWidthDelta, y: self.arrCoordLabel[i].y + delta * n))
+        path.addLine(to: CGPoint(x: x + self.lineWidht + self.leftWidthDelta, y: self.arrCoordLabel[i].y + delta * n))
+        return path
+    }
+    
+    private func addShapeLayerInView(){
+        for i in 0...self.arrLineShape.count - 1{
+            self.layer.addSublayer(self.arrLineShape[i])
         }
     }
     
@@ -94,12 +133,62 @@ class GraphView: UIView, CAAnimationDelegate{
         }
     }
     
+    private func setLabelX(contentOffSet: CGFloat){
+        let x = contentOffSet + self.leftWidthDelta
+        for i in 0...self.arrLabel.count - 1{
+            self.arrLabel[i].frame.origin.x = x
+            self.arrLineShape[i].path = createLinesPath(i: i, x: contentOffSet).cgPath
+        }
+    }
+    
+    private func setLabelValue(isScaleUpper: Bool){
+
+        var n: CGFloat = 0
+        if isScaleUpper{
+            n = -1.0
+        }
+        else{
+            n = 1.0
+        }
+        
+        for i in 1...self.arrLabel.count - 1{
+            self.arrLabel[i].alpha = 0
+            self.arrLabel[i].frame.origin.y = self.arrCoordLabel[i].y + n * 50
+            self.arrLabel[i].text = String(Int(realPointToY(value: self.arrCoordLabel[i].y)))
+            UIView.animate(withDuration: 0.2) {
+                self.arrLabel[i].alpha = self.labelAlpha
+                self.arrLabel[i].frame.origin.y = self.arrCoordLabel[i].y
+            }
+        }
+    }
+    
+    private func setLineValue(isScaleUpper: Bool, x: CGFloat){
+        
+        var arrPath: [UIBezierPath] = []
+        for i in 0...self.arrLineShape.count - 1{
+            arrPath.append(createLinesPath(i: i, x: x))
+        }
+        
+        for i in 1...self.arrLineShape.count - 1{
+            self.arrLineShape[i].path = createFakeLinePath(i: i, x: x, isScaleUpper: isScaleUpper).cgPath
+            let animation: CABasicAnimation = CABasicAnimation(keyPath: #keyPath(CAShapeLayer.path))
+            animation.duration = CFTimeInterval(0.2)
+            animation.fromValue = self.arrLineShape[i].path
+            self.arrLineShape[i].path = arrPath[i].cgPath
+            animation.toValue = arrPath[i].cgPath
+            self.arrLineShape[i].add(animation, forKey: nil)
+            animation.delegate = self
+        }
+        
+
+    }
+    
     private func createPath(nGraph: Int) -> UIBezierPath{
         let path = UIBezierPath()
-        let y = yToRealPoint(value: (self.graph?.arrDayInfo[0].arrY[nGraph])!)
+        let y = yToRealPoint(y: (self.graph?.arrDayInfo[0].arrY[nGraph])!)
         path.move(to: CGPoint(x: 0, y: y))
         for i in 1...(self.graph?.arrDayInfo.count)! - 1{
-            path.addLine(to: CGPoint(x: xToRealPoint(x: i), y: yToRealPoint(value: (self.graph?.arrDayInfo[i].arrY[nGraph])!)))
+            path.addLine(to: CGPoint(x: xToRealPoint(x: i), y: yToRealPoint(y: (self.graph?.arrDayInfo[i].arrY[nGraph])!)))
         }
         return path
     }
@@ -133,26 +222,44 @@ class GraphView: UIView, CAAnimationDelegate{
         return CGFloat(Double(x) * stepX)
     }
     
-    private func yToRealPoint(value: Int) -> CGFloat{
-        let value = self.frame.height - self.deltaHeihgt - CGFloat(value) * stepY
+    private func yToRealPoint(y: Int) -> CGFloat{
+        let value = self.frame.height - self.deltaHeightLower - CGFloat(y) * stepY
         return CGFloat(value)
     }
     
     private func realPointToY(value: CGFloat) -> CGFloat{
-        let y = (self.frame.height - self.deltaHeihgt - value) / CGFloat(stepY)
+        let y = (self.frame.height - self.deltaHeightLower - value) / CGFloat(stepY)
         return y
     }
     
-    func setPoints(graph: GraphInfo){
+    func setPoints(graph: GraphInfo, verticalGrid: Bool = false, contentOffSet: CGFloat = 0, isFullscreen: Bool = true, width: CGFloat = 0.0){
         self.startWidth = self.frame.width
         self.graph = graph
+        self.isFullScreen = isFullscreen
+        self.verticalGrid  = verticalGrid
         getMax()
+        if !self.isFullScreen{
+            self.deltaHeihgt = 2
+            self.deltaHeightLower = 2
+        }
         self.stepY = (self.frame.height - 2 * self.deltaHeihgt) / CGFloat(self.maxValueY)
         self.startStepY = self.stepY
         self.stepX = Double(self.frame.width) / Double((self.graph?.arrDayInfo.count)! - 1)
+        if verticalGrid {
+            self.lineWidht = width
+            verticalGridInit()
+            createShapeLayers(width: width)
+            addShapeLayerInView()
+//            setLabelX(contentOffSet: contentOffSet)
+        }
         for i in 0...(self.graph?.arrLineName.count)!-1{
             createGraph(nGraph: i)
         }
+        if verticalGrid{
+            addLabelInView()
+        }
+        
+        
         
     }
     
@@ -191,6 +298,7 @@ class GraphView: UIView, CAAnimationDelegate{
     }
     
     func scaleVerticalGraph(contentOfSet: CGFloat, viewWidth: CGFloat, isSetHeightOnly: Bool){
+        
         var startIndex: Int = Int(Double(contentOfSet) / self.stepX) - 1
         if startIndex < 0{
             startIndex = 0
@@ -208,8 +316,22 @@ class GraphView: UIView, CAAnimationDelegate{
                     max = maxVar
                 }
             }
+            let oldMaxValue = self.maxValueY
             self.maxValueY = max
-            self.stepY = (self.frame.height - 2 * self.deltaHeihgt) / CGFloat(self.maxValueY)
+            self.stepY = (self.frame.height - self.deltaHeihgt - self.deltaHeightLower) / CGFloat(self.maxValueY)
+            if self.verticalGrid{
+                self.lineWidht = viewWidth - 2 * self.leftWidthDelta
+                setLabelX(contentOffSet: contentOfSet)
+                if self.maxValueY > oldMaxValue{
+                    setLineValue(isScaleUpper: true, x: contentOfSet)
+                    setLabelValue(isScaleUpper: true)
+                }
+                else if self.maxValueY < oldMaxValue{
+                    setLineValue(isScaleUpper: false, x: contentOfSet)
+                    setLabelValue(isScaleUpper: false)
+                }
+                
+            }
             if !isBusy{
                 var duration = 0.0
                 if isSetHeightOnly {
@@ -219,10 +341,10 @@ class GraphView: UIView, CAAnimationDelegate{
                     duration = self.verticalScaleDurationWithWidth
                 }
                 reloadGraph(duration: duration)
-//                reloadHeightScale()
             }
         }
     }
+    
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         isBusy = false

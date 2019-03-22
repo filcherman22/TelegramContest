@@ -58,10 +58,11 @@ class MainViewController: UIViewController, UIScrollViewDelegate {
         self.rangeSlider.frame.size = CGSize(width: self.view.frame.width, height: self.rangeSlider.frame.height)
         self.rangeSlider.setPointsValue(lower: 1.0 - self.view.frame.width / CGFloat(self.widthGraph), upper: 1.0)
         setSizeGraph(width: self.widthGraph)
-        self.graphView.setPoints(graph: self.dataGraph[n])
-        self.graphViewSmall.setPoints(graph: self.dataGraph[n])
+        let contentOffSet: CGFloat = CGFloat(self.widthGraph) - self.scrollView.frame.width
+        self.graphView.setPoints(graph: self.dataGraph[n], verticalGrid: true, contentOffSet: contentOffSet, width: self.scrollView.frame.width)
+        self.graphViewSmall.setPoints(graph: self.dataGraph[n], isFullscreen: false)
         self.dateView.setDate(data: self.dataGraph[n])
-        self.scrollView.setContentOffset(CGPoint(x: self.widthGraph - Double(self.scrollView.frame.width), y: 0), animated: true)
+        self.scrollView.setContentOffset(CGPoint(x: contentOffSet, y: 0), animated: true)
     }
     
     func scaleWidth(width: Double){

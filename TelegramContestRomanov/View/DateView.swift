@@ -25,8 +25,9 @@ class DateView: UIView {
     var countSaveArr: Int = 0
     var data: GraphInfo?
     let labelWidth: CGFloat = 70
-    let labelHeight: CGFloat = 15
-    let labelFontSize: CGFloat = 10
+    let labelHeight: CGFloat = 18
+    let labelFontSize: CGFloat = 15
+    let labelAlpha: CGFloat = 0.5
     let alphaDuration: Double = 0.5
     var maxLabelsCount: Int = 0
     var maxWidth: CGFloat = 0
@@ -48,9 +49,9 @@ class DateView: UIView {
         for i in 0...self.data!.arrDayInfo.count - 1{
             if i % Int(self.stepChoise) == 0{
                 let label: UILabel = UILabel()
-                label.alpha = 1
+                label.alpha = self.labelAlpha
                 label.text = self.data!.arrDayInfo[i].date.asString(style: .medium)
-                label.font = UIFont(name: "default", size: self.labelFontSize)
+                label.font = UIFont.systemFont(ofSize: self.labelFontSize)
                 label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
                 label.textAlignment = .center
                 self.arrLabel.append(label)
@@ -91,7 +92,7 @@ class DateView: UIView {
     private func setStartLabelsAlpha(n: Int){
         for i in 0...self.arrLabel.count - 1{
             if i % Int(n) == 0 && i != 0{
-                self.arrLabel[i].alpha = 1
+                self.arrLabel[i].alpha = self.labelAlpha
             }
             else{
                 self.arrLabel[i].alpha = 0
@@ -103,14 +104,14 @@ class DateView: UIView {
         for i in 0...self.arrLabel.count - 1{
             if !self.arrStepBack[numArr][i] {
                 if self.arrStepBack[numArr - 1][i] != self.arrStepBack[numArr][i]{
-                    self.arrLabel[i].alpha = alpha
+                    self.arrLabel[i].alpha = alpha * self.labelAlpha
                 }
                 else{
                     self.arrLabel[i].alpha = 0
                 }
             }
             else{
-                self.arrLabel[i].alpha = 1
+                self.arrLabel[i].alpha = self.labelAlpha
             }
         }
     }
