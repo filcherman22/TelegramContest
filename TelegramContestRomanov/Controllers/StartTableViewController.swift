@@ -30,8 +30,6 @@ class StartTableViewController: UITableViewController, ChartDataProtocol, Theme 
         super.viewDidLoad()
         let dataJson = ParseJson()
         self.dataGraph = dataJson.getArrPoint()
-//        self.isDay = UserDefaults.standard.bool(forKey: "isDay")
-//        self.tableView.reloadData()
         
     }
     
@@ -85,14 +83,14 @@ class StartTableViewController: UITableViewController, ChartDataProtocol, Theme 
         if !self.isDay{
             self.tableView.backgroundColor = theme.backtColorDay
             self.tableView.separatorColor = theme.backtColorDay
-//            self.navigationController?.navigationBar.barTintColor = theme.frontColorDay
-//            self.navigationController?.navigationBar.barStyle = .default
+            self.navigationController?.navigationBar.barTintColor = theme.frontColorDay
+            self.navigationController?.navigationBar.barStyle = .default
         }
         else{
             self.tableView.backgroundColor = theme.backColorNight
             self.tableView.separatorColor = theme.backColorNight
-//            self.navigationController?.navigationBar.barTintColor = theme.frontColorNight
-//            self.navigationController?.navigationBar.barStyle = .black
+            self.navigationController?.navigationBar.barTintColor = theme.frontColorNight
+            self.navigationController?.navigationBar.barStyle = .black
         }
         self.tableView.reloadData()
         

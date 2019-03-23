@@ -103,12 +103,12 @@ class GraphView: UIView, CAAnimationDelegate{
         let x: CGFloat = self.leftWidthDelta + contentOffSet
         let yZero = yToRealPoint(y: 0)
         let gridHeihgt = self.frame.height - self.deltaHeihgt - self.deltaHeightLower - self.labelHeight - self.deltaLabelUpper
-        let gridStep = gridHeihgt / 4.0
+        let gridStep = gridHeihgt / CGFloat(self.arrLabelMaxCount - 1)
         var y: CGFloat = 0
         for i in 0...self.arrLabel.count - 1{
             arrLabel[i].frame.origin.x = x
             y = yZero - gridStep * CGFloat(i)
-            arrLabel[i].frame.origin.y = y
+            arrLabel[i].frame.origin.y = y - self.labelHeight
             arrLabel[i].text = String(Int(realPointToY(value: y)))
             self.arrCoordLabel[i] = CGPoint(x: x, y: y)
         }
@@ -123,7 +123,7 @@ class GraphView: UIView, CAAnimationDelegate{
             self.arrLineShape[i].fillColor = UIColor.clear.cgColor
             self.arrLineShape[i].lineWidth = 0.5
             self.arrLineShape[i].opacity = self.lineAlpha
-            self.arrLineShape[i].position = CGPoint(x: 0, y: self.deltaHeihgt + self.deltaLabelUpper - 10)
+            self.arrLineShape[i].position = CGPoint(x: 0, y: 0)
         }
     }
     private func createLinesPath(i: Int, x: CGFloat) -> UIBezierPath{
@@ -169,7 +169,6 @@ class GraphView: UIView, CAAnimationDelegate{
     }
     
     private func setLabelValue(isScaleUpper: Bool){
-
         var n: CGFloat = 0
         if isScaleUpper{
             n = -1.0
@@ -179,13 +178,15 @@ class GraphView: UIView, CAAnimationDelegate{
         }
         
         for i in 1...self.arrLabel.count - 1{
+            print("set arr labels")
             self.arrLabel[i].alpha = 0
-            self.arrLabel[i].frame.origin.y = self.arrCoordLabel[i].y + n * 50
+            self.arrLabel[i].frame.origin.y = self.arrCoordLabel[i].y - self.labelHeight + n * 50
             self.arrLabel[i].text = String(Int(realPointToY(value: self.arrCoordLabel[i].y)))
             UIView.animate(withDuration: 0.2) {
                 self.arrLabel[i].alpha = self.labelAlpha
-                self.arrLabel[i].frame.origin.y = self.arrCoordLabel[i].y
+                self.arrLabel[i].frame.origin.y = self.arrCoordLabel[i].y - self.labelHeight
             }
+            
         }
     }
     

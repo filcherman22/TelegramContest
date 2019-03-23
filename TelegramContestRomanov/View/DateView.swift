@@ -49,8 +49,6 @@ class DateView: UIView {
     }
     
     private func initColorThemeDay(){
-        let theme = ThemeColors()
-//        self.colorLabel = theme.dateLabelColorDay
         setTheme(isDay: self.isDay)
     }
     
@@ -90,7 +88,18 @@ class DateView: UIView {
         if self.data != nil{
             let width: CGFloat = self.frame.width / CGFloat((self.arrLabel.count -  1))
             for i in 0...self.arrLabel.count - 1{
-                self.arrLabel[i].center = CGPoint(x: width * CGFloat(i), y: self.frame.height / 2)
+                var x = width * CGFloat(i)
+                let y = self.frame.height / 2
+//                if x > self.frame.width - self.arrLabel[i].frame.width / 2 && self.arrLabel[i].alpha != 0{
+//                    if x >= self.frame.width - self.arrLabel[i].frame.width / 4{
+//                        self.arrLabel[i].alpha = 0
+//                    }
+//                    else{
+//                        self.arrLabel[i].alpha = (self.frame.width - x) / self.arrLabel[i].frame.width * 2 * self.labelAlpha
+//                    }
+//                    x = self.frame.width - self.arrLabel[i].frame.width / 2
+//                }
+                self.arrLabel[i].center = CGPoint(x: x, y: y)
             }
         }
         
@@ -99,7 +108,7 @@ class DateView: UIView {
     func setWidth(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat){
         self.frame = CGRect(x: x, y: y, width: width, height: height)
         if self.data != nil{
-            dateReload()
+//            dateReload()
             reloadLabelsAlpha()
             createOriginCoord()
         }
@@ -107,7 +116,7 @@ class DateView: UIView {
     }
     
     func dateReload(){
-        self.stepChoise = self.data!.arrDayInfo.count / self.maxLabelsCount + 1
+        self.stepChoise = self.data!.arrDayInfo.count / self.maxLabelsCount - 1
     }
     
     private func setStartLabelsAlpha(n: Int){
