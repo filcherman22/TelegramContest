@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol Theme {
+    var isDay: Bool! {get set}
+}
+
 extension UIImage {
     convenience init(view: UIView) {
         UIGraphicsBeginImageContext(view.frame.size)
@@ -18,7 +22,7 @@ extension UIImage {
     }
 }
 
-class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource, ChartDataProtocol {
+class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource, ChartDataProtocol, Theme {
    
     
     var choiseChart: GraphInfo!
@@ -33,7 +37,11 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     var isSetHeight: Bool = true
     var arrHidden: [String] = []
     var isLoad: Int = 0
-    var isDay: Bool = true
+    var isDay: Bool!{
+        didSet{
+            UserDefaults.standard.set(self.isDay, forKey: "isDay")
+        }
+    }
     
 //    @IBOutlet weak var titleLabelNavigationBar: UILabel!
     @IBOutlet weak var heightTableViewConstraint: NSLayoutConstraint!
@@ -47,9 +55,9 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var followersLabel: UILabel!
     @IBAction func tapButtonTheme(_ sender: UIButton) {
-        setTheme(isDay: self.isDay)
         self.isDay = !self.isDay
-    }
+        setTheme(isDay: self.isDay)
+}
     
     
     @IBAction func RangeSliderOutSide(_ sender: RangeSlider) {
@@ -72,10 +80,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.isDay = UserDefaults.standard.bool(forKey: "isDay")
         let heightCell = self.tableView.rowHeight
         self.heightTableViewConstraint.constant = heightCell * CGFloat(self.choiseChart.arrLineName.count)
         createViewInContentView()
         initDefault()
+        setTheme(isDay: self.isDay)
     }
     
     override func viewDidLayoutSubviews() {
@@ -87,13 +97,20 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
        
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        
+    }
+    
+    
     private func createViewInContentView(){
-        self.scrollView.backgroundColor = UIColor.white
+//        self.scrollView.backgroundColor = UIColor.white
         self.graphView = GraphView(frame: CGRect(x: 0, y: 0, width: self.scrollView.frame.width, height: self.scrollView.frame.height - self.heightDateView))
         self.scrollView.addSubview(self.graphView)
         self.dateView = DateView(frame: CGRect(x: 0, y: self.graphView.frame.height, width: self.graphView.frame.width, height: self.heightDateView))
@@ -123,8 +140,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         self.scrollView.setContentOffset(CGPoint(x: contentOffSet, y: 0), animated: false)
         self.rangeSlider.setPointsValue(lower: 1.0 - self.scrollView.frame.width / CGFloat(self.widthGraph), upper: 1.0)
         self.dateView.setDate(data: self.choiseChart)
-        
-        
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -140,8 +155,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     // Table View
     
     
-    
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.choiseChart.arrLineName.count
     }
@@ -152,7 +165,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         cell.textLabel?.text = self.choiseChart.arrLineName[indexPath.row]
         let theme = ThemeColors()
         let backView = UIView()
-        if !self.isDay{
+        if self.isDay{
             cell.textLabel?.textColor = theme.tintColorNight
             backView.backgroundColor = theme.backColorNight
             cell.backgroundColor = theme.frontColorNight
@@ -204,7 +217,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
             backColor = theme.backtColorDay
             barStyle = UIBarStyle.default
             separatorColor = theme.backtColorDay
-            textButton = "Switch to Day Mode"
+            textButton = "Switch to Night Mode"
             textColor = theme.tintColorDay
         }
         else{
@@ -212,7 +225,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
             backColor = theme.backColorNight
             barStyle = UIBarStyle.black
             separatorColor = theme.backColorNight
-            textButton = "Switch to Night Mode"
+            textButton = "Switch to Day Mode"
             textColor = theme.tintColorNight
         }
         
@@ -222,6 +235,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
             self.tableView.backgroundColor = frontColor
             self.contentView.backgroundColor = frontColor
             self.scrollView.backgroundColor = frontColor
+            self.followersLabel.textColor = textColor
             
             self.buttonTheme.backgroundColor = frontColor
             self.navigationController?.navigationBar.barTintColor = frontColor

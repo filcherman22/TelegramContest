@@ -34,6 +34,8 @@ class DateView: UIView {
     var stepChoise: Int = 0
     var reactionAlpha: CGFloat = 0.4
     
+    var isDay: Bool = false
+    
     var colorLabel: UIColor = UIColor()
     
     override init(frame: CGRect) {
@@ -48,8 +50,8 @@ class DateView: UIView {
     
     private func initColorThemeDay(){
         let theme = ThemeColors()
-        self.colorLabel = theme.dateLabelColorDay
-        setTheme(isDay: false)
+//        self.colorLabel = theme.dateLabelColorDay
+        setTheme(isDay: self.isDay)
     }
     
     func setDate(data: GraphInfo){
@@ -62,6 +64,7 @@ class DateView: UIView {
         createOriginCoord()
         addLabelToView()
         createArrSaves()
+        setTheme(isDay: self.isDay)
     }
     private func createArrLabel(){
         for i in 0...self.data!.arrDayInfo.count - 1{
@@ -72,7 +75,6 @@ class DateView: UIView {
                 label.font = UIFont.systemFont(ofSize: self.labelFontSize)
                 label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
                 label.textAlignment = .center
-                label.textColor = self.colorLabel
                 self.arrLabel.append(label)
             }
         }
@@ -205,6 +207,7 @@ class DateView: UIView {
     }
     
     func setTheme(isDay: Bool){
+        self.isDay = isDay
         let theme = ThemeColors()
         UIView.animate(withDuration: theme.duration) {
             for el in self.arrLabel{

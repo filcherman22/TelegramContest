@@ -14,8 +14,15 @@ protocol ChartDataProtocol {
     }
 }
 
-class StartTableViewController: UITableViewController, ChartDataProtocol {
-
+class StartTableViewController: UITableViewController, ChartDataProtocol, Theme {
+    
+    var isDay: Bool!{
+        didSet(old){
+            UserDefaults.standard.set(self.isDay, forKey: "isDay")
+            print("did set")
+        }
+    }
+    
     var dataGraph: [GraphInfo] = []
     var choiseChart: GraphInfo!
     
@@ -23,17 +30,15 @@ class StartTableViewController: UITableViewController, ChartDataProtocol {
         super.viewDidLoad()
         let dataJson = ParseJson()
         self.dataGraph = dataJson.getArrPoint()
-        self.tableView.reloadData()
+//        self.isDay = UserDefaults.standard.bool(forKey: "isDay")
+//        self.tableView.reloadData()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("will")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        print("did")
+        self.isDay = UserDefaults.standard.bool(forKey: "isDay")
+        setTheme(isDay: self.isDay)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -47,6 +52,19 @@ class StartTableViewController: UITableViewController, ChartDataProtocol {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "chioseChartCell", for: indexPath)
         cell.textLabel?.text = String(indexPath.row + 1) + " chart"
+        let theme = ThemeColors()
+        let backView = UIView()
+        if self.isDay{
+            cell.textLabel?.textColor = theme.tintColorNight
+            backView.backgroundColor = theme.backColorNight
+            cell.backgroundColor = theme.frontColorNight
+        }
+        else{
+            cell.textLabel?.textColor = theme.tintColorDay
+            backView.backgroundColor = theme.backtColorDay
+            cell.backgroundColor = theme.frontColorDay
+        }
+        cell.selectedBackgroundView = backView
         return cell
     }
     
@@ -60,6 +78,24 @@ class StartTableViewController: UITableViewController, ChartDataProtocol {
             let list = segue.destination as! MainViewController
             list.choiseChart = self.choiseChart
         }
+    }
+    
+    private func setTheme(isDay: Bool){
+        let theme = ThemeColors()
+        if !self.isDay{
+            self.tableView.backgroundColor = theme.backtColorDay
+            self.tableView.separatorColor = theme.backtColorDay
+//            self.navigationController?.navigationBar.barTintColor = theme.frontColorDay
+//            self.navigationController?.navigationBar.barStyle = .default
+        }
+        else{
+            self.tableView.backgroundColor = theme.backColorNight
+            self.tableView.separatorColor = theme.backColorNight
+//            self.navigationController?.navigationBar.barTintColor = theme.frontColorNight
+//            self.navigationController?.navigationBar.barStyle = .black
+        }
+        self.tableView.reloadData()
+        
     }
     
 }
