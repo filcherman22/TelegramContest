@@ -50,27 +50,34 @@ class GraphView: UIView, CAAnimationDelegate{
     let labelInfoAlpha: Double = 1.0
     var viewInfo: UIView!
     let viewInfowidth: CGFloat = 100
-    let labelInfoDateHeight: CGFloat = 30
+    let labelInfoDateHeight: CGFloat = 50
     let labelInfoDateFontSize: CGFloat = 15
     var labelInfoDate: UILabel!
     var arrLabelInfoValues: [UILabel] = []
     
-    @IBAction func tapView(_ sender: UITapGestureRecognizer) {
-        print("tap")
-    }
+    // theme
+    var viewInfoBackgroundColor: UIColor = UIColor()
+    var colorTextLabelInfoDate: UIColor = UIColor()
+    var colorTextLabel: UIColor = UIColor()
+    var colorLine: UIColor = UIColor()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        verticalLineLayerInit()
+        startValue()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        verticalLineLayerInit()
+        startValue()
     }
     
     private func defaultInit(){
         self.arrCoordLabel = Array(repeating: CGPoint(), count: self.arrLabel.count)
+    }
+    
+    private func startValue(){
+        setTheme(isDay: false)
+        verticalLineLayerInit()
     }
     
     private func verticalGridInit() {
@@ -86,6 +93,7 @@ class GraphView: UIView, CAAnimationDelegate{
             label.text = ""
             label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
             label.font = UIFont.systemFont(ofSize: self.labelFontSize)
+            label.textColor = self.colorTextLabel
             label.textAlignment = .left
             self.arrLabel.append(label)
         }
@@ -111,7 +119,7 @@ class GraphView: UIView, CAAnimationDelegate{
         for i in 0...self.arrCoordLabel.count - 1{
             self.arrLineShape.append(CAShapeLayer())
             self.arrLineShape[i].path = createLinesPath(i: i, x: 0.0).cgPath
-            self.arrLineShape[i].strokeColor = UIColor.black.cgColor
+            self.arrLineShape[i].strokeColor = self.colorLine.cgColor
             self.arrLineShape[i].fillColor = UIColor.clear.cgColor
             self.arrLineShape[i].lineWidth = 0.5
             self.arrLineShape[i].opacity = self.lineAlpha
@@ -412,6 +420,7 @@ class GraphView: UIView, CAAnimationDelegate{
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isFullScreen{
             createNewInfoView()
+//            setColorInfo()
             let x = (touches.first?.location(in: self).x)!
             setCoordInfo(x: x)
             setPointVertcalLine(x: x)
@@ -423,6 +432,7 @@ class GraphView: UIView, CAAnimationDelegate{
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isFullScreen{
+//            setColorInfo()
             let x = (touches.first?.location(in: self).x)!
             setCoordInfo(x: x)
             setPointVertcalLine(x: x)
@@ -447,7 +457,7 @@ class GraphView: UIView, CAAnimationDelegate{
     
     private func verticalLineLayerInit(){
         self.verticalLineLayer = CAShapeLayer()
-        self.verticalLineLayer.strokeColor = UIColor.black.cgColor
+        self.verticalLineLayer.strokeColor = self.colorLine.cgColor
         self.verticalLineLayer.fillColor = UIColor.clear.cgColor
         self.verticalLineLayer.lineWidth = 0.5
         self.verticalLineLayer.opacity = self.lineAlpha
@@ -489,10 +499,10 @@ class GraphView: UIView, CAAnimationDelegate{
     private func initInfoView(){
         self.viewInfo = UIView()
         self.addSubview(viewInfo)
-        self.viewInfo.backgroundColor = UIColor.init(white: 0.8, alpha: 1)
+        self.viewInfo.backgroundColor = self.viewInfoBackgroundColor
         self.viewInfo.layer.cornerRadius = 5
         self.viewInfo.frame = CGRect(x: 0, y: 0, width: self.viewInfowidth, height: 100)
-        
+        self.viewInfo.isHidden = true
         
         for i in 0...(self.graph?.arrLineName)!.count - 1{
             let label = UILabel()
@@ -517,6 +527,7 @@ class GraphView: UIView, CAAnimationDelegate{
         self.labelInfoDate = UILabel()
         self.labelInfoDate.text = "Date"
         self.labelInfoDate.textAlignment = .left
+        self.labelInfoDate.textColor = self.colorTextLabelInfoDate
         self.labelInfoDate.font = UIFont.systemFont(ofSize: self.labelInfoDateFontSize)
         self.labelInfoDate.frame.size = CGSize(width: self.viewInfowidth - self.labelInfowidth, height: self.labelInfoDateHeight)
         
@@ -542,6 +553,22 @@ class GraphView: UIView, CAAnimationDelegate{
         }
     }
     
+    private func setColors(){
+        setColorInfo()
+        for el in self.arrLabel{
+            el.textColor = self.colorTextLabel
+        }
+        for el in self.arrLineShape{
+            el.strokeColor = self.colorLine.cgColor
+        }
+        self.verticalLineLayer?.strokeColor = self.colorLine.cgColor
+    }
+    
+    private func setColorInfo(){
+        self.viewInfo?.backgroundColor = self.viewInfoBackgroundColor
+        self.labelInfoDate?.textColor = self.colorTextLabelInfoDate
+    }
+    
     private func updateViewInfo(x: CGFloat){
         let j = lroundf(Float(realPointToX(value: x)))
         for i in 0...self.arrLabelInfoValues.count - 1{
@@ -561,4 +588,24 @@ class GraphView: UIView, CAAnimationDelegate{
         
     }
     
+    func setTheme(isDay: Bool){
+        let theme = ThemeColors()
+        UIView.animate(withDuration: theme.duration) {
+            if !isDay{
+                self.viewInfoBackgroundColor = theme.backtColorDay
+                self.colorTextLabelInfoDate = theme.tintColorDay
+                self.backgroundColor = theme.frontColorDay
+                self.colorTextLabel = theme.graphLabelsTextColorDay
+                self.colorLine = theme.graphLabelsTextColorDay
+            }
+            else{
+                self.viewInfoBackgroundColor = theme.backColorNight
+                self.colorTextLabelInfoDate = theme.tintColorNight
+                self.backgroundColor = theme.frontColorNight
+                self.colorTextLabel = theme.graphLabelsTextColorNight
+                self.colorLine = theme.graphLabelsTextColorNight
+            }
+        }
+        setColors()
+    }
 }

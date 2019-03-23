@@ -25,6 +25,16 @@ class StartTableViewController: UITableViewController, ChartDataProtocol {
         self.dataGraph = dataJson.getArrPoint()
         self.tableView.reloadData()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("will")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("did")
+    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1

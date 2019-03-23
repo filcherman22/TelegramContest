@@ -9,6 +9,16 @@
 import UIKit
 
 struct ThemeColors {
+    
+    init() {
+        self.graphLineColorDay = self.graphLabelsTextColorDay
+        self.graphLineNight = self.graphLabelsTextColorNight
+        self.dateLabelColorDay = self.graphLabelsTextColorDay
+        self.dateLabelColorNight = self.graphLabelsTextColorNight
+    }
+    
+    let duration: Double = 0.1
+    
     let frontColorNight: UIColor = UIColor(red: 33 / 255, green: 47 / 255, blue: 63 / 255, alpha: 1.0)
     let backColorNight: UIColor = UIColor(red: 24 / 255, green: 34 / 255, blue: 45 / 255, alpha: 1.0)
     
@@ -17,5 +27,13 @@ struct ThemeColors {
     
     let tintColorDay: UIColor = UIColor.black
     let tintColorNight: UIColor = UIColor.white
+    
+    let graphLabelsTextColorDay: UIColor = UIColor.black
+    let graphLabelsTextColorNight: UIColor = UIColor.white
+    let graphLineColorDay: UIColor!
+    let graphLineNight: UIColor!
+    
+    let dateLabelColorDay: UIColor!
+    let dateLabelColorNight: UIColor!
     
 }

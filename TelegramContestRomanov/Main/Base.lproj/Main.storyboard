@@ -182,6 +182,7 @@
                     <connections>
                         <outlet property="buttonTheme" destination="upu-wh-8b1" id="cFu-4L-CtB"/>
                         <outlet property="contentView" destination="Cfo-9l-NYW" id="XDa-7i-F82"/>
+                        <outlet property="followersLabel" destination="ifs-1c-YlS" id="MgP-CR-SPg"/>
                         <outlet property="graphViewSmall" destination="b9b-Lg-fER" id="ztc-Bg-wX3"/>
                         <outlet property="heightTableViewConstraint" destination="Y7o-Re-rHh" id="D8v-Ps-98p"/>
                         <outlet property="rangeSlider" destination="bGp-nI-LVH" id="7Im-2X-0ht"/>
