@@ -74,11 +74,13 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="upu-wh-8b1">
                                 <rect key="frame" x="0.0" y="597" width="375" height="50"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="gvq-J5-1Ia"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="tapButtonTheme:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NS9-RO-N7t"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Followers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ifs-1c-YlS">
                                 <rect key="frame" x="16" y="84" width="343" height="18"/>
@@ -178,6 +180,8 @@
                     <navigationItem key="navigationItem" id="Kdx-mn-khn"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="buttonTheme" destination="upu-wh-8b1" id="cFu-4L-CtB"/>
+                        <outlet property="contentView" destination="Cfo-9l-NYW" id="k0I-Gh-63F"/>
                         <outlet property="graphViewSmall" destination="b9b-Lg-fER" id="ztc-Bg-wX3"/>
                         <outlet property="heightTableViewConstraint" destination="Y7o-Re-rHh" id="D8v-Ps-98p"/>
                         <outlet property="rangeSlider" destination="bGp-nI-LVH" id="7Im-2X-0ht"/>

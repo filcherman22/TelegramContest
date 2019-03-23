@@ -36,6 +36,8 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     let minCountDay: Int = 30
     var isSetHeight: Bool = true
     var arrHidden: [String] = []
+    var isLoad: Bool = false
+    var isDay: Bool = true
     
     @IBOutlet weak var heightTableViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -44,6 +46,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     @IBOutlet weak var graphViewSmall: GraphView!
     @IBOutlet weak var rangeSlider: RangeSlider!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var buttonTheme: UIButton!
+    @IBOutlet weak var contentView: UIView!
+    @IBAction func tapButtonTheme(_ sender: UIButton) {
+        setTheme(isDay: self.isDay)
+        self.isDay = !self.isDay
+    }
     
     
     @IBAction func RangeSliderOutSide(_ sender: RangeSlider) {
@@ -66,20 +74,30 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        let heightCell = self.tableView.rowHeight
+        self.heightTableViewConstraint.constant = heightCell * CGFloat(self.choiseChart.arrLineName.count)
+        createViewInContentView()
+        initDefault()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        print("did layout")
+        if isLoad{
+            setGraph()
+//            self.isLoad = false
+            return
+        }
+        self.isLoad = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let heightCell = self.tableView.rowHeight
-        self.heightTableViewConstraint.constant = heightCell * CGFloat(self.choiseChart.arrLineName.count)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        createViewInContentView()
-        initDefault()
-        setGraph(n: self.choiseGraph)
+        
     }
     
     private func createViewInContentView(){
@@ -101,18 +119,16 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         
     }
     
-    func setGraph(n: Int){
+    func setGraph(){
         self.widthGraph = Double(self.scrollView.frame.width) / Double(self.minCountDay) * Double(self.choiseChart.arrDayInfo.count - 1)
-        
-        self.rangeSlider.setPointsValue(lower: 1.0 - self.view.frame.width / CGFloat(self.widthGraph), upper: 1.0)
         
         setSizeGraph(width: self.widthGraph)
         
         let contentOffSet: CGFloat = CGFloat(self.widthGraph) - self.scrollView.frame.width
-        self.scrollView.setContentOffset(CGPoint(x: contentOffSet, y: 0), animated: true)
-        print(self.graphView.frame)
         self.graphView.setPoints(graph: self.choiseChart, verticalGrid: true, contentOffSet: contentOffSet, width: self.scrollView.frame.width)
-        self.graphViewSmall.setPoints(graph: self.choiseChart, isFullscreen: false)
+        self.graphViewSmall.setPoints(graph: self.choiseChart, isFullscreen: false, width: self.graphViewSmall.frame.width)
+        self.scrollView.setContentOffset(CGPoint(x: contentOffSet, y: 0), animated: false)
+        self.rangeSlider.setPointsValue(lower: 1.0 - self.scrollView.frame.width / CGFloat(self.widthGraph), upper: 1.0)
         self.dateView.setDate(data: self.choiseChart)
         
         
@@ -149,6 +165,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         viewToImage.layer.cornerRadius = viewToImage.frame.height / 2
         let image: UIImage = UIImage(view: viewToImage)
         cell.imageView?.image = image
+        cell.backgroundColor = UIColor.clear
         return cell
     }
     
@@ -166,7 +183,32 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         self.graphView.setGraphHidden(names: self.arrHidden)
         self.graphView.scaleVerticalGraph(contentOfSet: self.scrollView.contentOffset.x, viewWidth: self.scrollView.frame.width, isSetHeightOnly: true)
         self.graphViewSmall.setGraphHidden(names: self.arrHidden)
-        self.graphViewSmall.scaleVerticalGraph(contentOfSet: 0, viewWidth: self.scrollView.frame.width, isSetHeightOnly: true)
+        self.graphViewSmall.scaleVerticalGraph(contentOfSet: 0, viewWidth: self.graphViewSmall.frame.width, isSetHeightOnly: true)
         tableView.cellForRow(at: indexPath)?.isSelected = false
     }
+    
+    private func setTheme(isDay: Bool){
+        let theme = ThemeColors()
+        let frontColor: UIColor!
+        let backColor: UIColor!
+        
+        if !isDay{
+            frontColor = theme.frontColorDay
+            backColor = theme.backtColorDay
+        }
+        else{
+            frontColor = theme.frontColorNight
+            backColor = theme.backColorNight
+        }
+        UIView.animate(withDuration: 0.2) {
+            self.view.backgroundColor = backColor
+            self.dateView.backgroundColor = frontColor
+            self.graphView.backgroundColor = frontColor
+            self.tableView.backgroundColor = frontColor
+            self.tableView.reloadData()
+            self.contentView.backgroundColor = frontColor
+            self.graphViewSmall.backgroundColor = frontColor
+        }
+    }
+    
 }

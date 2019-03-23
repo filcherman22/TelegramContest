@@ -71,6 +71,7 @@ class RangeSlider: UIControl {
         updateLayerFrames()
         
         CATransaction.commit()
+        
     }
     
     private func initSettingsDefault(){
