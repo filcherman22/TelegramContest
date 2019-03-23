@@ -64,7 +64,7 @@
             </objects>
             <point key="canvasLocation" x="-918" y="-627"/>
         </scene>
-        <!--Main View Controller-->
+        <!--Statistics-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="TelegramContestRomanov" customModuleProvider="target" sceneMemberID="viewController">
@@ -177,11 +177,11 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="Kdx-mn-khn"/>
+                    <navigationItem key="navigationItem" title="Statistics" id="gFD-eh-KjB"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
                         <outlet property="buttonTheme" destination="upu-wh-8b1" id="cFu-4L-CtB"/>
-                        <outlet property="contentView" destination="Cfo-9l-NYW" id="k0I-Gh-63F"/>
+                        <outlet property="contentView" destination="Cfo-9l-NYW" id="XDa-7i-F82"/>
                         <outlet property="graphViewSmall" destination="b9b-Lg-fER" id="ztc-Bg-wX3"/>
                         <outlet property="heightTableViewConstraint" destination="Y7o-Re-rHh" id="D8v-Ps-98p"/>
                         <outlet property="rangeSlider" destination="bGp-nI-LVH" id="7Im-2X-0ht"/>

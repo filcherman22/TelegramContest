@@ -15,4 +15,7 @@ struct ThemeColors {
     let frontColorDay: UIColor = UIColor(red: 255 / 255, green: 255 / 255, blue: 255 / 255, alpha: 1.0)
     let backtColorDay: UIColor = UIColor(red: 239 / 255, green: 239 / 255, blue: 244 / 255, alpha: 1.0)
     
+    let tintColorDay: UIColor = UIColor.black
+    let tintColorNight: UIColor = UIColor.white
+    
 }

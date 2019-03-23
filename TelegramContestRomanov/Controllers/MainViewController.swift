@@ -39,6 +39,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     var isLoad: Bool = false
     var isDay: Bool = true
     
+//    @IBOutlet weak var titleLabelNavigationBar: UILabel!
     @IBOutlet weak var heightTableViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     var dateView: DateView!
@@ -191,23 +192,31 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         let theme = ThemeColors()
         let frontColor: UIColor!
         let backColor: UIColor!
+        let titleColor: UIColor!
+        let barStyle: UIBarStyle!
         
         if !isDay{
             frontColor = theme.frontColorDay
             backColor = theme.backtColorDay
+            titleColor = theme.tintColorDay
+            barStyle = UIBarStyle.default
         }
         else{
             frontColor = theme.frontColorNight
             backColor = theme.backColorNight
+            titleColor = theme.tintColorNight
+            barStyle = UIBarStyle.black
         }
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: 0.1) {
             self.view.backgroundColor = backColor
             self.dateView.backgroundColor = frontColor
             self.graphView.backgroundColor = frontColor
             self.tableView.backgroundColor = frontColor
-            self.tableView.reloadData()
             self.contentView.backgroundColor = frontColor
             self.graphViewSmall.backgroundColor = frontColor
+            self.buttonTheme.backgroundColor = frontColor
+            self.navigationController?.navigationBar.barTintColor = frontColor
+            self.navigationController?.navigationBar.barStyle = barStyle
         }
     }
     
