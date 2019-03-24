@@ -88,6 +88,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         createViewInContentView()
         initDefault()
         setTheme(isDay: self.isDay)
+        self.contentView.sendSubviewToBack(self.graphViewSmall)
     }
     
     override func viewDidLayoutSubviews() {

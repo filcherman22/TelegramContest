@@ -51,9 +51,16 @@ class GraphView: UIView, CAAnimationDelegate{
     let labelInfoDateHeight: CGFloat = 50
     let labelInfoDateFontSize: CGFloat = 15
     var labelInfoDate: UILabel!
-    let labelInfoDateWidth: CGFloat = 50
+    let labelInfoDateWidth: CGFloat = 70
     let boundsDeltaLabelInfoWidth: CGFloat = 5
     var arrLabelInfoValues: [UILabel] = []
+    let deltaPointToViewInfo: CGFloat = 5
+    
+    var xTouch: CGFloat = 0
+    
+    var contentOffSetScrollView: CGFloat = 0
+    var viewWidthScrollView: CGFloat = 0
+    var isTouch: Bool = false
     
     // theme
     var viewInfoBackgroundColor: UIColor = UIColor()
@@ -143,7 +150,7 @@ class GraphView: UIView, CAAnimationDelegate{
             n = 1.0
         }
         let path = UIBezierPath()
-        let delta: CGFloat = 50.0
+        let delta: CGFloat = self.labelHeight * 2
         path.move(to: CGPoint(x: x + self.leftWidthDelta, y: self.arrCoordLabel[i].y + delta * n))
         path.addLine(to: CGPoint(x: x + self.lineWidht + self.leftWidthDelta, y: self.arrCoordLabel[i].y + delta * n))
         return path
@@ -333,6 +340,9 @@ class GraphView: UIView, CAAnimationDelegate{
     
     func scaleVerticalGraph(contentOfSet: CGFloat, viewWidth: CGFloat, isSetHeightOnly: Bool){
         
+        self.contentOffSetScrollView = contentOfSet
+        self.scrolViewWidth = viewWidth
+        
         var startIndex: Int = Int(Double(contentOfSet) / self.stepX) - 1
         if startIndex < 0{
             startIndex = 0
@@ -344,11 +354,12 @@ class GraphView: UIView, CAAnimationDelegate{
         var max: Int = -1
         var maxVar:Int = 0
         var arrYValue: [Int] = []
+        let minimum: Int = -1
         if startIndex < stopIndex{
             for i in startIndex...stopIndex{
                 arrYValue = (self.graph?.arrDayInfo[i].arrY)!
                 for el in self.arrHiddenNum{
-                    arrYValue[el] = -1
+                    arrYValue[el] = minimum
                 }
                 maxVar = arrYValue.max()!
                     if maxVar > max{
@@ -357,18 +368,32 @@ class GraphView: UIView, CAAnimationDelegate{
             }
             let oldMaxValue = self.maxValueY
             self.maxValueY = max
-            self.stepY = (self.frame.height - self.deltaHeihgt - self.deltaHeightLower) / CGFloat(self.maxValueY)
+            if self.maxValueY == minimum{
+                self.maxValueY = oldMaxValue
+                self.stepY = (self.frame.height - self.deltaHeihgt - self.deltaHeightLower) / CGFloat(self.maxValueY) * 1.5
+            }else{
+                self.stepY = (self.frame.height - self.deltaHeihgt - self.deltaHeightLower) / CGFloat(self.maxValueY)
+            }
+            
             if self.verticalGrid{
+                let oldStepY = self.stepY
+                if max == minimum{
+                    self.stepY = (self.frame.height - self.deltaHeihgt - self.deltaHeightLower)
+                }
                 self.lineWidht = viewWidth - 2 * self.leftWidthDelta
                 setLabelX(contentOffSet: contentOfSet)
-                if self.maxValueY > oldMaxValue{
+                if self.maxValueY > oldMaxValue {
                     setLineValue(isScaleUpper: true, x: contentOfSet)
                     setLabelValue(isScaleUpper: true)
                 }
-                else if self.maxValueY < oldMaxValue{
+                else if self.maxValueY < oldMaxValue {
                     setLineValue(isScaleUpper: false, x: contentOfSet)
                     setLabelValue(isScaleUpper: false)
                 }
+                else if max == minimum && self.arrHiddenNum.count == (self.graph?.arrLineName.count)! - 1{
+                    createStartCoord(contentOffSet: contentOfSet)
+                }
+                self.stepY = oldStepY
                 
             }
             if !isBusy{
@@ -380,6 +405,10 @@ class GraphView: UIView, CAAnimationDelegate{
                     duration = self.verticalScaleDurationWithWidth
                 }
                 reloadGraph(duration: duration)
+                if self.verticalGrid{
+                    setPointVertcalLine(x: self.xTouch)
+                }
+                
             }
         }
     }
@@ -402,6 +431,11 @@ class GraphView: UIView, CAAnimationDelegate{
             }
         }
         hiddenLayers()
+        if self.verticalGrid{
+            setCoordInfo(x: self.xTouch)
+            setPointVertcalLine(x: self.xTouch)
+            setHiddenInfo(isHidden: !self.isTouch)
+        }
     }
     
     private func hiddenLayers(){
@@ -419,12 +453,13 @@ class GraphView: UIView, CAAnimationDelegate{
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isFullScreen{
+            self.isTouch = true
             let x = (touches.first?.location(in: self).x)!
+            self.xTouch = x
             updateViewInfo(x: x)
             createNewInfoView()
-//            setColorInfo()
             
-            setCoordInfo(x: x)
+            setCoordInfo(x: x, isStart: true)
             setPointVertcalLine(x: x)
             
             setHiddenInfo(isHidden: false)
@@ -434,12 +469,14 @@ class GraphView: UIView, CAAnimationDelegate{
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isFullScreen{
-//            setColorInfo()
+            self.isTouch = true
             let x = (touches.first?.location(in: self).x)!
+            self.xTouch = x
             updateViewInfo(x: x)
             createNewInfoView()
             setCoordInfo(x: x)
             setPointVertcalLine(x: x)
+            setHiddenInfo(isHidden: false)
             
         }
         super.touchesMoved(touches, with: event)
@@ -447,15 +484,16 @@ class GraphView: UIView, CAAnimationDelegate{
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isFullScreen{
+            self.isTouch = false
             setHiddenInfo(isHidden: true)
         }
         super.touchesEnded(touches, with: event)
     }
     
-    private func createVerticalLinePath(x: CGFloat) -> UIBezierPath{
+    private func createVerticalLinePath(x: CGFloat, y: CGFloat) -> UIBezierPath{
         let path = UIBezierPath()
-        path.move(to: CGPoint(x: x, y: 0))
-        path.addLine(to: CGPoint(x: x, y: self.frame.height))
+        path.move(to: CGPoint(x: x, y: self.frame.height))
+        path.addLine(to: CGPoint(x: x, y: y))
         return path
     }
     
@@ -469,33 +507,70 @@ class GraphView: UIView, CAAnimationDelegate{
         self.layer.addSublayer(self.verticalLineLayer)
     }
     
-    private func setCoordInfo(x: CGFloat){
-        print("start")
-        let xView = x - self.viewInfo.frame.width / 2
-        self.verticalLineLayer.path = createVerticalLinePath(x: x).cgPath
-        let j: Int = lroundf(Float(realPointToX(value: x)))
-        for i in 0...(self.graph?.arrLineName.count)! - 1{
-            if self.arrHiddenNum.firstIndex(of: i) == nil{
-                let y: CGFloat = yToRealPoint(y: (self.graph?.arrDayInfo[j].arrY[i])!)
-                if y < self.viewInfo.frame.height + self.viewInfo.frame.origin.y{
-                    if self.frame.width - x < self.viewInfo.frame.width{
-                        self.viewInfo.frame.origin.x = x - self.viewInfo.frame.width
-                    }
-                    else{
-                        self.viewInfo.frame.origin.x = x
-                    }
-                    return
-                }
-            } 
+    private func getNUm(valueX: CGFloat) -> Int{
+        let j: Int = lroundf(Float(realPointToX(value: valueX)))
+        if j < 0{
+            return 0
         }
-        if xView < 0 {
-            self.viewInfo.frame.origin = CGPoint(x: 0, y: 0)
-        }
-        else if xView > self.frame.width - self.viewInfo.frame.width{
-            self.viewInfo.frame.origin = CGPoint(x: self.frame.width - self.viewInfo.frame.width, y: 0)
+        else if j > (self.graph?.arrDayInfo.count)! - 1{
+            return (self.graph?.arrDayInfo.count)! - 1
         }
         else{
-            self.viewInfo.frame.origin = CGPoint(x: xView, y: 0)
+            return j
+        }
+    }
+    
+    private func setCoordInfo(x: CGFloat, isStart: Bool = false){
+        var xView = x - self.viewInfo.frame.width / 2
+        var isMoreMax: Bool = false
+        var yMax: CGFloat = self.deltaPointToViewInfo
+        let j: Int = getNUm(valueX: x)
+        for i in 0...(self.graph?.arrLineName.count)! - 1{
+            let y: CGFloat = yToRealPoint(y: (self.graph?.arrDayInfo[j].arrY[i])!)
+            if self.arrHiddenNum.firstIndex(of: i) == nil{
+                if y < self.viewInfo.frame.height + self.deltaPointToViewInfo * 2{
+                    xView = x + self.deltaPointToViewInfo
+                    var max: Int = -1
+                    for i in 0...(self.graph?.arrDayInfo[j].arrY.count)! - 1{
+                        if self.arrHiddenNum.firstIndex(of: i) == nil{
+                            if max < (self.graph?.arrDayInfo[j].arrY[i])!{
+                                max = (self.graph?.arrDayInfo[j].arrY[i])!
+                            }
+                        }
+                    }
+                    isMoreMax = true
+                    yMax = yToRealPoint(y: max)
+                    break
+                }
+            }
+            UIView.animate(withDuration: 0.0) {
+                self.viewInfo.frame.origin.y = self.deltaPointToViewInfo
+            }
+        }
+        self.verticalLineLayer.path = createVerticalLinePath(x: x, y: yMax).cgPath
+        let duration: Double!
+        if isStart{
+            duration = 0.0
+        }
+        else{
+            duration = 0.1
+        }
+        UIView.animate(withDuration: duration) {
+            if xView < self.contentOffSetScrollView {
+                self.viewInfo.frame.origin.x = self.contentOffSetScrollView
+            }
+            else if xView > self.contentOffSetScrollView + self.scrolViewWidth - self.viewInfo.frame.width{
+                if isMoreMax{
+                    self.viewInfo.frame.origin.x = x - self.deltaPointToViewInfo - self.viewInfo.frame.width
+                }
+                else{
+                    self.viewInfo.frame.origin.x = self.contentOffSetScrollView + self.scrolViewWidth - self.viewInfo.frame.width
+                }
+                
+            }
+            else{
+                self.viewInfo.frame.origin.x = xView
+            }
         }
     }
     
@@ -527,7 +602,7 @@ class GraphView: UIView, CAAnimationDelegate{
         self.addSubview(viewInfo)
         self.viewInfo.backgroundColor = self.viewInfoBackgroundColor
         self.viewInfo.layer.cornerRadius = 5
-        self.viewInfo.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        self.viewInfo.frame = CGRect(x: 0, y: self.deltaPointToViewInfo, width: 100, height: 100)
         self.viewInfo.isHidden = true
         
         for i in 0...(self.graph?.arrLineName)!.count - 1{
@@ -614,7 +689,7 @@ class GraphView: UIView, CAAnimationDelegate{
     }
     
     private func updateViewInfo(x: CGFloat){
-        let j = lroundf(Float(realPointToX(value: x)))
+        let j = getNUm(valueX: x)
         for i in 0...self.arrLabelInfoValues.count - 1{
             self.arrLabelInfoValues[i].text = String(self.graph!.arrDayInfo[j].arrY[i])
         }
@@ -622,8 +697,11 @@ class GraphView: UIView, CAAnimationDelegate{
     }
     
     private func setPointVertcalLine(x: CGFloat){
-        let j: Int = lroundf(Float(realPointToX(value: x)))
+        let j: Int = getNUm(valueX: x)
         let diameter: CGFloat = 6.0
+        if self.arrVerticalPointLayer.count == 0{
+            return
+        }
         for i in 0...self.arrVerticalPointLayer.count - 1{
             let realY: Int = (self.graph?.arrDayInfo[j].arrY[i])!
             let path = UIBezierPath(ovalIn: CGRect(x: CGFloat(xToRealPoint(x: j)) - diameter / 2, y: yToRealPoint(y: realY) - diameter / 2, width: diameter, height: diameter))
