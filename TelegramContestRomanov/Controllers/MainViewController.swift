@@ -47,6 +47,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
 //    @IBOutlet weak var titleLabelNavigationBar: UILabel!
     @IBOutlet weak var heightTableViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var superScrollView: UIScrollView!
     var dateView: DateView!
     var graphView: GraphView!
     @IBOutlet weak var graphViewSmall: GraphView!
@@ -55,6 +56,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     @IBOutlet weak var buttonTheme: UIButton!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var followersLabel: UILabel!
+    @IBOutlet weak var viewScrollViewBack: UIView!
     @IBAction func tapButtonTheme(_ sender: UIButton) {
         self.isDay = !self.isDay
         setTheme(isDay: self.isDay)
@@ -84,7 +86,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         self.arrCheck = Array(repeating: true, count: self.choiseChart.arrLineName.count)
         self.isDay = UserDefaults.standard.bool(forKey: "isDay")
         let heightCell = self.tableView.rowHeight
-        self.heightTableViewConstraint.constant = heightCell * 2//CGFloat(self.choiseChart.arrLineName.count)
+        self.heightTableViewConstraint.constant = heightCell * CGFloat(self.choiseChart.arrLineName.count)
         createViewInContentView()
         initDefault()
         setTheme(isDay: self.isDay)
@@ -103,7 +105,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
 //        self.scrollView.backgroundColor = UIColor.white
         self.graphView = GraphView(frame: CGRect(x: 0, y: 0, width: self.scrollView.frame.width, height: self.scrollView.frame.height - self.heightDateView))
         self.scrollView.addSubview(self.graphView)
-        self.dateView = DateView(frame: CGRect(x: 0, y: self.graphView.frame.height, width: self.graphView.frame.width, height: self.heightDateView))
+        self.dateView = DateView(frame: CGRect(x: 0, y: self.graphView.frame.height, width: self.scrollView.frame.width, height: self.heightDateView))
         self.scrollView.addSubview(self.dateView)
     }
     
@@ -133,13 +135,17 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let contentIndex = scrollView.contentOffset.x
-        if contentIndex < 0{
-            self.scrollView.contentOffset.x = 0
-        }
-        if contentIndex > self.scrollView.contentSize.width - self.scrollView.frame.width{
-            self.scrollView.contentOffset.x = self.scrollView.contentSize.width - self.scrollView.frame.width
-        }
+//        let contentIndexX = scrollView.contentOffset.x
+//        if contentIndexX < 0{
+//            self.scrollView.contentOffset.x = 0
+//        }
+//        if contentIndexX > self.scrollView.contentSize.width - self.scrollView.frame.width{
+//            self.scrollView.contentOffset.x = self.scrollView.contentSize.width - self.scrollView.frame.width
+//        }
+//        let contentIndexY = scrollView.contentOffset.y
+//        if contentIndexY < 0 {
+//            scrollView.contentOffset.y = 0
+//        }
     }
     
     // Table View
@@ -157,7 +163,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         else{
             cell.accessoryType = .none
         }
-        
         cell.textLabel?.text = self.choiseChart.arrLineName[indexPath.row]
         let theme = ThemeColors()
         let backView = UIView()
@@ -177,20 +182,22 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         viewToImage.layer.cornerRadius = viewToImage.frame.height / 2
         let image: UIImage = UIImage(view: viewToImage)
         cell.imageView?.image = image
-        cell.isSelected = false
+
+//        cell.isSelected = false
+//        cell.setSelected(false, animated: false)
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark{
-            self.arrCheck[indexPath.row] = false
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
+            self.arrCheck[indexPath.row] = false
         }
         else{
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
             self.arrCheck[indexPath.row] = true
-            
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
         var arrName: [String] = []
         for i in 0...self.arrCheck.count - 1{
@@ -198,14 +205,18 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
                 arrName.append(self.choiseChart.arrLineName[i])
             }
         }
-        tableView.cellForRow(at: indexPath)?.isSelected = false
         
         self.graphView.setGraphHidden(names: arrName)
         self.graphView.scaleVerticalGraph(contentOfSet: self.scrollView.contentOffset.x, viewWidth: self.scrollView.frame.width, isSetHeightOnly: true)
         self.graphViewSmall.setGraphHidden(names: arrName)
         self.graphViewSmall.scaleVerticalGraph(contentOfSet: 0, viewWidth: self.graphViewSmall.frame.width, isSetHeightOnly: true)
+        tableView.cellForRow(at: indexPath)?.setSelected(false, animated: false)
         
     }
+    
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        self.tableView.cellForRow(at: indexPath)?.setSelected(false, animated: false)
+//    }
     
     private func setTheme(isDay: Bool){
         let theme = ThemeColors()
@@ -235,10 +246,12 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         
         UIView.animate(withDuration: theme.duration) {
             self.view.backgroundColor = backColor
+            self.viewScrollViewBack.backgroundColor = backColor
             
             self.tableView.backgroundColor = frontColor
             self.contentView.backgroundColor = frontColor
             self.scrollView.backgroundColor = frontColor
+            
             self.followersLabel.textColor = textColor
             
             self.buttonTheme.backgroundColor = frontColor

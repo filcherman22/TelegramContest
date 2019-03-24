@@ -16,6 +16,13 @@ extension Date {
         let dateStr = dateFormatter.string(from: self)
         return dateStr
     }
+    
+    func getYear4Sibbols() -> String{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY"
+        let dateStr = dateFormatter.string(from: self)
+        return dateStr
+    }
 }
 
 class DateView: UIView {
@@ -66,7 +73,16 @@ class DateView: UIView {
     }
     private func createArrLabel(){
         for i in 0...self.data!.arrDayInfo.count - 1{
-            if i % Int(self.stepChoise) == 0{
+            if (( (i + 1) % self.stepChoise == self.stepChoise / 2) || ( (i+1) == self.stepChoise / 2)){
+                let label: UILabel = UILabel()
+                label.alpha = self.labelAlpha
+                label.text = self.data!.arrDayInfo[i].date.asString(style: .medium)
+                label.font = UIFont.systemFont(ofSize: self.labelFontSize)
+                label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
+                label.textAlignment = .center
+                self.arrLabel.append(label)
+            }
+            else if i == self.data!.arrDayInfo.count - 1 && self.arrLabel.count != self.maxLabelsCount{
                 let label: UILabel = UILabel()
                 label.alpha = self.labelAlpha
                 label.text = self.data!.arrDayInfo[i].date.asString(style: .medium)
@@ -88,35 +104,45 @@ class DateView: UIView {
         if self.data != nil{
             let width: CGFloat = self.frame.width / CGFloat((self.arrLabel.count -  1))
             for i in 0...self.arrLabel.count - 1{
-                let x = width * CGFloat(i)
+                var x = width * CGFloat(i) + width / 2
                 let y = self.frame.height / 2
-//                if x > self.frame.width - self.arrLabel[i].frame.width / 2 && self.arrLabel[i].alpha != 0{
-//                    if x >= self.frame.width - self.arrLabel[i].frame.width / 4{
-//                        self.arrLabel[i].alpha = 0
-//                    }
-//                    else{
+                if x > self.frame.width - self.arrLabel[i].frame.width / 2 && self.arrLabel[i].alpha != 0{
+                    if x >= self.frame.width - self.arrLabel[i].frame.width / 1.5{
+                        
+                    }
+                    else{
 //                        self.arrLabel[i].alpha = (self.frame.width - x) / self.arrLabel[i].frame.width * 2 * self.labelAlpha
-//                    }
+                    }
 //                    x = self.frame.width - self.arrLabel[i].frame.width / 2
-//                }
+                }
                 self.arrLabel[i].center = CGPoint(x: x, y: y)
             }
         }
         
     }
     
+    private func isWarning(iSelf: Int) -> Bool{
+        for i in 0...self.arrLabel.count - 1{
+            if iSelf != i && self.arrLabel[i].alpha == self.labelAlpha && -(self.arrLabel[i].center.x - self.arrLabel[iSelf].center.x) <= self.labelWidth {
+                return true
+            }
+        }
+        return false
+    }
+    
     func setWidth(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat){
         self.frame = CGRect(x: x, y: y, width: width, height: height)
         if self.data != nil{
 //            dateReload()
-            reloadLabelsAlpha()
             createOriginCoord()
+            reloadLabelsAlpha()
+            
         }
         
     }
     
     func dateReload(){
-        self.stepChoise = self.data!.arrDayInfo.count / self.maxLabelsCount - 1
+        self.stepChoise = self.data!.arrDayInfo.count / (self.maxLabelsCount) + 1
     }
     
     private func setStartLabelsAlpha(n: Int){
@@ -135,10 +161,12 @@ class DateView: UIView {
             if !self.arrStepBack[numArr][i] {
                 if self.arrStepBack[numArr - 1][i] != self.arrStepBack[numArr][i]{
                     self.arrLabel[i].alpha = alpha * self.labelAlpha
+                    
                 }
                 else{
                     self.arrLabel[i].alpha = 0
                 }
+                
             }
             else{
                 self.arrLabel[i].alpha = self.labelAlpha
@@ -203,7 +231,7 @@ class DateView: UIView {
             for i in 0...self.arrLabel.count - 1{
                 if self.arrLabel[i].alpha < self.labelAlpha && self.arrLabel[i].alpha != 0{
                     UIView.animate(withDuration: 0.2) {
-                        if self.labelAlpha / self.arrLabel[i].alpha >= 2.0{
+                        if self.labelAlpha / self.arrLabel[i].alpha >= 1.5{
                             self.arrLabel[i].alpha = 0
                         }
                         else{

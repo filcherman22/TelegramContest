@@ -630,6 +630,7 @@ class GraphView: UIView, CAAnimationDelegate{
         self.labelInfoDate.textAlignment = .left
         self.labelInfoDate.textColor = self.colorTextLabelInfoDate
         self.labelInfoDate.font = UIFont.systemFont(ofSize: self.labelInfoDateFontSize)
+        self.labelInfoDate.numberOfLines = 2
 //        self.labelInfoDate.frame.size = CGSize(width: self.viewInfowidth - self.labelInfowidth, height: self.labelInfoDateHeight)
         
         self.viewInfo.addSubview(self.labelInfoDate)
@@ -693,7 +694,7 @@ class GraphView: UIView, CAAnimationDelegate{
         for i in 0...self.arrLabelInfoValues.count - 1{
             self.arrLabelInfoValues[i].text = String(self.graph!.arrDayInfo[j].arrY[i])
         }
-        self.labelInfoDate.text = self.graph?.arrDayInfo[j].date.asString(style: .short)
+        self.labelInfoDate.text = (self.graph?.arrDayInfo[j].date.asString(style: .short))! + "\n" + (self.graph?.arrDayInfo[j].date.getYear4Sibbols())!
     }
     
     private func setPointVertcalLine(x: CGFloat){
