@@ -104,7 +104,7 @@ class DateView: UIView {
         if self.data != nil{
             let width: CGFloat = self.frame.width / CGFloat((self.arrLabel.count -  1))
             for i in 0...self.arrLabel.count - 1{
-                var x = width * CGFloat(i) + width / 2
+                let x = width * CGFloat(i) + width / 2
                 let y = self.frame.height / 2
                 if x > self.frame.width - self.arrLabel[i].frame.width / 2 && self.arrLabel[i].alpha != 0{
                     if x >= self.frame.width - self.arrLabel[i].frame.width / 1.5{
