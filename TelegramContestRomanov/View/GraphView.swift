@@ -13,7 +13,7 @@ class GraphView: UIView, CAAnimationDelegate{
     
     
     var deltaHeihgt: CGFloat = 20
-    var deltaHeightLower: CGFloat = 20
+    var deltaHeightLower: CGFloat = 0
     let deltaLabelUpper: CGFloat = 5
     var shapeLayer: [CAShapeLayer] = []
     var path: [UIBezierPath] = []
@@ -46,13 +46,13 @@ class GraphView: UIView, CAAnimationDelegate{
     
     let labelInfoHeight: CGFloat = 15
     let labelInfoFontSize: CGFloat = 12
-    let labelInfowidth: CGFloat = 50
     let labelInfoAlpha: Double = 1.0
     var viewInfo: UIView!
-    let viewInfowidth: CGFloat = 100
     let labelInfoDateHeight: CGFloat = 50
     let labelInfoDateFontSize: CGFloat = 15
     var labelInfoDate: UILabel!
+    let labelInfoDateWidth: CGFloat = 50
+    let boundsDeltaLabelInfoWidth: CGFloat = 5
     var arrLabelInfoValues: [UILabel] = []
     
     // theme
@@ -178,7 +178,6 @@ class GraphView: UIView, CAAnimationDelegate{
         }
         
         for i in 1...self.arrLabel.count - 1{
-            print("set arr labels")
             self.arrLabel[i].alpha = 0
             self.arrLabel[i].frame.origin.y = self.arrCoordLabel[i].y - self.labelHeight + n * 50
             self.arrLabel[i].text = String(Int(realPointToY(value: self.arrCoordLabel[i].y)))
@@ -420,12 +419,14 @@ class GraphView: UIView, CAAnimationDelegate{
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isFullScreen{
+            let x = (touches.first?.location(in: self).x)!
+            updateViewInfo(x: x)
             createNewInfoView()
 //            setColorInfo()
-            let x = (touches.first?.location(in: self).x)!
+            
             setCoordInfo(x: x)
             setPointVertcalLine(x: x)
-            updateViewInfo(x: x)
+            
             setHiddenInfo(isHidden: false)
         }
         super.touchesBegan(touches, with: event)
@@ -435,9 +436,11 @@ class GraphView: UIView, CAAnimationDelegate{
         if isFullScreen{
 //            setColorInfo()
             let x = (touches.first?.location(in: self).x)!
+            updateViewInfo(x: x)
+            createNewInfoView()
             setCoordInfo(x: x)
             setPointVertcalLine(x: x)
-            updateViewInfo(x: x)
+            
         }
         super.touchesMoved(touches, with: event)
     }
@@ -467,8 +470,25 @@ class GraphView: UIView, CAAnimationDelegate{
     }
     
     private func setCoordInfo(x: CGFloat){
-        self.verticalLineLayer.path = createVerticalLinePath(x: x).cgPath
+        print("start")
         let xView = x - self.viewInfo.frame.width / 2
+        self.verticalLineLayer.path = createVerticalLinePath(x: x).cgPath
+        let j: Int = lroundf(Float(realPointToX(value: x)))
+        for i in 0...(self.graph?.arrLineName.count)! - 1{
+            if self.arrHiddenNum.firstIndex(of: i) == nil{
+                let y: CGFloat = yToRealPoint(y: (self.graph?.arrDayInfo[j].arrY[i])!)
+                if y < self.viewInfo.frame.height + self.viewInfo.frame.origin.y{
+                    if self.frame.width - x < self.viewInfo.frame.width{
+                        self.viewInfo.frame.origin.x = x - self.viewInfo.frame.width
+                    }
+                    else{
+                        self.viewInfo.frame.origin.x = x
+                    }
+                    return
+                }
+            }
+            
+        }
         if xView < 0 {
             self.viewInfo.frame.origin = CGPoint(x: 0, y: 0)
         }
@@ -490,8 +510,14 @@ class GraphView: UIView, CAAnimationDelegate{
         }
         else{
             self.verticalLineLayer.opacity = self.lineAlpha
-            for el in self.arrVerticalPointLayer{
-                el.opacity = 1.0
+            for i in 0...self.arrVerticalPointLayer.count - 1{
+                if self.arrHiddenNum.firstIndex(of: i) != nil{
+                    self.arrVerticalPointLayer[i].opacity = 0.0
+                }
+                else{
+                    self.arrVerticalPointLayer[i].opacity = 1.0
+                }
+                
             }
         }
         self.viewInfo.isHidden = isHidden
@@ -502,7 +528,7 @@ class GraphView: UIView, CAAnimationDelegate{
         self.addSubview(viewInfo)
         self.viewInfo.backgroundColor = self.viewInfoBackgroundColor
         self.viewInfo.layer.cornerRadius = 5
-        self.viewInfo.frame = CGRect(x: 0, y: 0, width: self.viewInfowidth, height: 100)
+        self.viewInfo.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         self.viewInfo.isHidden = true
         
         for i in 0...(self.graph?.arrLineName)!.count - 1{
@@ -510,7 +536,7 @@ class GraphView: UIView, CAAnimationDelegate{
             label.text = "69"
             label.textAlignment = .right
             label.textColor = self.graph?.arrLineColor[i]
-            label.frame.size = CGSize(width: self.labelInfowidth, height: self.labelInfoHeight)
+            label.frame.size = CGSize(width: 10, height: self.labelInfoHeight)
             label.font = UIFont.systemFont(ofSize: self.labelInfoFontSize)
             self.arrLabelInfoValues.append(label)
             self.viewInfo.addSubview(self.arrLabelInfoValues[i])
@@ -530,7 +556,7 @@ class GraphView: UIView, CAAnimationDelegate{
         self.labelInfoDate.textAlignment = .left
         self.labelInfoDate.textColor = self.colorTextLabelInfoDate
         self.labelInfoDate.font = UIFont.systemFont(ofSize: self.labelInfoDateFontSize)
-        self.labelInfoDate.frame.size = CGSize(width: self.viewInfowidth - self.labelInfowidth, height: self.labelInfoDateHeight)
+//        self.labelInfoDate.frame.size = CGSize(width: self.viewInfowidth - self.labelInfowidth, height: self.labelInfoDateHeight)
         
         self.viewInfo.addSubview(self.labelInfoDate)
     }
@@ -544,14 +570,32 @@ class GraphView: UIView, CAAnimationDelegate{
         else{
             height = self.labelInfoDateHeight
         }
-        self.viewInfo.frame.size = CGSize(width: self.viewInfowidth, height: height)
-        self.labelInfoDate.frame.origin.x = 0
+        var labelWidth: CGFloat = 0
+        for el in self.arrLabelInfoValues{
+            let fit = el.sizeThatFits(CGSize(width: 500, height: 500)).width
+            if labelWidth < fit{
+                labelWidth = fit
+            }
+        }
+        self.viewInfo.frame.size = CGSize(width: self.boundsDeltaLabelInfoWidth * 3 + labelWidth + self.labelInfoDateWidth, height: height)
+        
+        self.labelInfoDate.frame.size = CGSize(width: self.labelInfoDateWidth, height: height)
+        self.labelInfoDate.frame.origin.x = self.boundsDeltaLabelInfoWidth
         self.labelInfoDate.frame.origin.y = self.viewInfo.frame.height / 2 - self.labelInfoDate.frame.height / 2
         
         let step = self.viewInfo.frame.height / CGFloat(count + 1)
-        for i in 0...self.arrLabelInfoValues.count - 1{
-            self.arrLabelInfoValues[i].frame.origin = CGPoint(x: self.viewInfo.frame.width - self.labelInfowidth, y: step + step * CGFloat(i) - self.labelInfoHeight / 2)
+        var i: Int = 0
+        for j in 0...self.arrLabelInfoValues.count - 1{
+            if self.arrHiddenNum.firstIndex(of: j) != nil{
+                self.arrLabelInfoValues[j].isHidden = true
+            }
+            else{
+                self.arrLabelInfoValues[j].isHidden = false
+                self.arrLabelInfoValues[j].frame = CGRect(x: self.viewInfo.frame.width - labelWidth - self.self.boundsDeltaLabelInfoWidth, y: step + step * CGFloat(i) - self.labelInfoHeight / 2, width: labelWidth, height: self.labelInfoHeight)
+                i = i + 1
+            }
         }
+        
     }
     
     private func setColors(){

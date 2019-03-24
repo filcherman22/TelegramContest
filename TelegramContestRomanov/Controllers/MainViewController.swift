@@ -26,7 +26,9 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
    
     
     var choiseChart: GraphInfo!
-    var delegate = AppDelegate()
+//    var delegate = AppDelegate()
+    
+    var arrCheck: [Bool] = []
     
     let choiseGraph: Int = 0
     
@@ -35,7 +37,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     let heightDateView: CGFloat = 30
     let minCountDay: Int = 30
     var isSetHeight: Bool = true
-    var arrHidden: [String] = []
     var isLoad: Int = 0
     var isDay: Bool!{
         didSet{
@@ -80,9 +81,10 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.arrCheck = Array(repeating: true, count: self.choiseChart.arrLineName.count)
         self.isDay = UserDefaults.standard.bool(forKey: "isDay")
         let heightCell = self.tableView.rowHeight
-        self.heightTableViewConstraint.constant = heightCell * CGFloat(self.choiseChart.arrLineName.count)
+        self.heightTableViewConstraint.constant = heightCell * 2//CGFloat(self.choiseChart.arrLineName.count)
         createViewInContentView()
         initDefault()
         setTheme(isDay: self.isDay)
@@ -94,20 +96,7 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         if isLoad == 2{
             setGraph()
         }
-       
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        
-    }
-    
     
     private func createViewInContentView(){
 //        self.scrollView.backgroundColor = UIColor.white
@@ -161,7 +150,13 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "chCell", for: indexPath)
-        cell.accessoryType = .checkmark
+        if self.arrCheck[indexPath.row]{
+            cell.accessoryType = .checkmark
+        }
+        else{
+            cell.accessoryType = .none
+        }
+        
         cell.textLabel?.text = self.choiseChart.arrLineName[indexPath.row]
         let theme = ThemeColors()
         let backView = UIView()
@@ -181,26 +176,34 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         viewToImage.layer.cornerRadius = viewToImage.frame.height / 2
         let image: UIImage = UIImage(view: viewToImage)
         cell.imageView?.image = image
+        cell.isSelected = false
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let name = (tableView.cellForRow(at: indexPath)?.textLabel?.text)!
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark{
+            self.arrCheck[indexPath.row] = false
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
-            self.arrHidden.append(name)
         }
         else{
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-            self.arrHidden.remove(at:self.arrHidden.firstIndex(of: name)!)
+            self.arrCheck[indexPath.row] = true
             
         }
-        self.graphView.setGraphHidden(names: self.arrHidden)
-        self.graphView.scaleVerticalGraph(contentOfSet: self.scrollView.contentOffset.x, viewWidth: self.scrollView.frame.width, isSetHeightOnly: true)
-        self.graphViewSmall.setGraphHidden(names: self.arrHidden)
-        self.graphViewSmall.scaleVerticalGraph(contentOfSet: 0, viewWidth: self.graphViewSmall.frame.width, isSetHeightOnly: true)
+        var arrName: [String] = []
+        for i in 0...self.arrCheck.count - 1{
+            if !self.arrCheck[i]{
+                arrName.append(self.choiseChart.arrLineName[i])
+            }
+        }
         tableView.cellForRow(at: indexPath)?.isSelected = false
+        
+        self.graphView.setGraphHidden(names: arrName)
+        self.graphView.scaleVerticalGraph(contentOfSet: self.scrollView.contentOffset.x, viewWidth: self.scrollView.frame.width, isSetHeightOnly: true)
+        self.graphViewSmall.setGraphHidden(names: arrName)
+        self.graphViewSmall.scaleVerticalGraph(contentOfSet: 0, viewWidth: self.graphViewSmall.frame.width, isSetHeightOnly: true)
+        
     }
     
     private func setTheme(isDay: Bool){
