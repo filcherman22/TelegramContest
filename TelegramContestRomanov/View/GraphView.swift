@@ -486,8 +486,7 @@ class GraphView: UIView, CAAnimationDelegate{
                     }
                     return
                 }
-            }
-            
+            } 
         }
         if xView < 0 {
             self.viewInfo.frame.origin = CGPoint(x: 0, y: 0)

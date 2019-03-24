@@ -19,7 +19,6 @@ class StartTableViewController: UITableViewController, ChartDataProtocol, Theme 
     var isDay: Bool!{
         didSet(old){
             UserDefaults.standard.set(self.isDay, forKey: "isDay")
-            print("did set")
         }
     }
     
