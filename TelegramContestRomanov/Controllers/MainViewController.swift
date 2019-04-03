@@ -26,7 +26,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
    
     
     var choiseChart: GraphInfo!
-//    var delegate = AppDelegate()
     
     var arrCheck: [Bool] = []
     
@@ -44,7 +43,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         }
     }
     
-//    @IBOutlet weak var titleLabelNavigationBar: UILabel!
     @IBOutlet weak var heightTableViewConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var superScrollView: UIScrollView!
@@ -102,7 +100,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
     }
     
     private func createViewInContentView(){
-//        self.scrollView.backgroundColor = UIColor.white
         self.graphView = GraphView(frame: CGRect(x: 0, y: 0, width: self.scrollView.frame.width, height: self.scrollView.frame.height - self.heightDateView))
         self.scrollView.addSubview(self.graphView)
         self.dateView = DateView(frame: CGRect(x: 0, y: self.graphView.frame.height, width: self.scrollView.frame.width, height: self.heightDateView))
@@ -134,19 +131,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         self.dateView.setDate(data: self.choiseChart)
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let contentIndexX = scrollView.contentOffset.x
-//        if contentIndexX < 0{
-//            self.scrollView.contentOffset.x = 0
-//        }
-//        if contentIndexX > self.scrollView.contentSize.width - self.scrollView.frame.width{
-//            self.scrollView.contentOffset.x = self.scrollView.contentSize.width - self.scrollView.frame.width
-//        }
-//        let contentIndexY = scrollView.contentOffset.y
-//        if contentIndexY < 0 {
-//            scrollView.contentOffset.y = 0
-//        }
-    }
     
     // Table View
     
@@ -183,8 +167,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         let image: UIImage = UIImage(view: viewToImage)
         cell.imageView?.image = image
 
-//        cell.isSelected = false
-//        cell.setSelected(false, animated: false)
         
         return cell
     }
@@ -214,9 +196,6 @@ class MainViewController: UIViewController, UIScrollViewDelegate, UITableViewDel
         
     }
     
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        self.tableView.cellForRow(at: indexPath)?.setSelected(false, animated: false)
-//    }
     
     private func setTheme(isDay: Bool){
         let theme = ThemeColors()

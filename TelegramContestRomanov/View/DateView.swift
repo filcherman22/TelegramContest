@@ -10,7 +10,7 @@ import UIKit
 
 
 extension Date {
-    func asString(style: DateFormatter.Style) -> String {
+    func asString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM dd"
         let dateStr = dateFormatter.string(from: self)
@@ -76,7 +76,7 @@ class DateView: UIView {
             if (( (i + 1) % self.stepChoise == self.stepChoise / 2) || ( (i+1) == self.stepChoise / 2)){
                 let label: UILabel = UILabel()
                 label.alpha = self.labelAlpha
-                label.text = self.data!.arrDayInfo[i].date.asString(style: .medium)
+                label.text = self.data!.arrDayInfo[i].date.asString()
                 label.font = UIFont.systemFont(ofSize: self.labelFontSize)
                 label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
                 label.textAlignment = .center
@@ -85,7 +85,7 @@ class DateView: UIView {
             else if i == self.data!.arrDayInfo.count - 1 && self.arrLabel.count != self.maxLabelsCount{
                 let label: UILabel = UILabel()
                 label.alpha = self.labelAlpha
-                label.text = self.data!.arrDayInfo[i].date.asString(style: .medium)
+                label.text = self.data!.arrDayInfo[i].date.asString()
                 label.font = UIFont.systemFont(ofSize: self.labelFontSize)
                 label.frame.size = CGSize(width: self.labelWidth, height: self.labelHeight)
                 label.textAlignment = .center
@@ -106,15 +106,6 @@ class DateView: UIView {
             for i in 0...self.arrLabel.count - 1{
                 let x = width * CGFloat(i) + width / 2
                 let y = self.frame.height / 2
-                if x > self.frame.width - self.arrLabel[i].frame.width / 2 && self.arrLabel[i].alpha != 0{
-                    if x >= self.frame.width - self.arrLabel[i].frame.width / 1.5{
-                        
-                    }
-                    else{
-//                        self.arrLabel[i].alpha = (self.frame.width - x) / self.arrLabel[i].frame.width * 2 * self.labelAlpha
-                    }
-//                    x = self.frame.width - self.arrLabel[i].frame.width / 2
-                }
                 self.arrLabel[i].center = CGPoint(x: x, y: y)
             }
         }
